@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" clipAndEnableScrolling="true">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:Rect width="100%" height="100%">
+		<s:fill>
+			<s:SolidColor color="0xB9B9B9"/>
+		</s:fill>
+	</s:Rect>
+	
+	<mx:Form>
+		<mx:FormItem label="Placa:">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Cor:">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Combutível:">
+			<s:DropDownList />
+		</mx:FormItem>
+		<mx:FormItem label="Chassi:">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Renavam:">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Modelo:">
+			<s:DropDownList/>
+		</mx:FormItem>
+		<mx:FormItem label="Data Compra:">
+			<mx:DateField/>
+		</mx:FormItem>
+		<mx:FormItem label="Num Nota Fiscal:">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Ano:">
+			<s:TextInput/>
+		</mx:FormItem>
+		<mx:FormItem label="Categoria:">
+			<s:DropDownList/>
+		</mx:FormItem>
+		<mx:FormItem label="Portas:">
+			<s:NumericStepper maximum="4" minimum="2" stepSize="1"/>
+		</mx:FormItem>
+		<mx:FormItem>
+			<mx:DataGrid height="125">
+				<mx:columns>
+					<mx:DataGridColumn headerText="Acessórios"/>
+					<mx:DataGridColumn />
+				</mx:columns>
+			</mx:DataGrid>
+		</mx:FormItem>
+		<mx:FormItem direction="horizontal">
+			<s:Button label="Locar"/>
+			<s:Button label="Salvar"/>
+			<s:Button label="Cancelar"/>
+		</mx:FormItem>
+	</mx:Form>
+</s:Group>

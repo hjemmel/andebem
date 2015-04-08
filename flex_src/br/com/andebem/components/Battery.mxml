@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					  xmlns:s="library://ns.adobe.com/flex/spark" 
+					  xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:Graphic>
+		<s:Group blendMode="normal">
+			<s:Group blendMode="normal" x="0" y="5">
+				<s:Rect height="48" radiusX="1.99102" radiusY="1.99102" width="40" x="1" y="1">
+					<s:fill>
+						<s:LinearGradient scaleX="40" x="0" y="24">
+							<s:GradientEntry color="#78C14E" ratio="0"/>
+							<s:GradientEntry color="#A3EE36" ratio="0.6484"/>
+							<s:GradientEntry color="#0F7B0A" ratio="1"/>
+						</s:LinearGradient>
+					</s:fill>
+				</s:Rect>
+				<s:Rect height="48" radiusX="1.99102" radiusY="1.99102" width="40" x="1.5" y="0.5">
+					<s:stroke>
+						<s:SolidColorStroke caps="none" color="#33669A" joints="miter" miterLimit="4" weight="1"/>
+					</s:stroke>
+				</s:Rect>
+			</s:Group>
+			<s:Group blendMode="normal" x="12" y="0">
+				<s:Rect height="10" radiusX="1.99102" radiusY="1.99102" width="16" x="1" y="1">
+					<s:fill>
+						<s:LinearGradient scaleX="16" x="0" y="5">
+							<s:GradientEntry ratio="0"/>
+							<s:GradientEntry color="#040404" ratio="0.255399"/>
+							<s:GradientEntry color="#0C0C0C" ratio="0.336699"/>
+							<s:GradientEntry color="#1A1A1A" ratio="0.406926"/>
+							<s:GradientEntry color="#2F2F2F" ratio="0.474563"/>
+							<s:GradientEntry color="#4C4C4C" ratio="0.53646"/>
+							<s:GradientEntry color="#A1A1A1" ratio="0.648352"/>
+							<s:GradientEntry color="#5B5B5B" ratio="0.736974"/>
+							<s:GradientEntry color="#292929" ratio="0.825274"/>
+							<s:GradientEntry color="#0A0A0A" ratio="0.913183"/>
+							<s:GradientEntry ratio="1"/>
+						</s:LinearGradient>
+					</s:fill>
+				</s:Rect>
+				<s:Rect height="10" radiusX="1.99102" radiusY="1.99102" width="16" x="1.5" y="0.5">
+					<s:stroke>
+						<s:SolidColorStroke caps="none" color="#333333" joints="miter" miterLimit="4" weight="1"/>
+					</s:stroke>
+				</s:Rect>
+			</s:Group>
+			<s:Group blendMode="normal" d:id="8" flm:knockout="false" x="0" y="5">
+				<s:Rect height="12" radiusX="1.99102" radiusY="1.99102" width="40" x="1" y="1">
+					<s:fill>
+						<s:LinearGradient scaleX="40" x="0" y="6">
+							<s:GradientEntry ratio="0"/>
+							<s:GradientEntry color="#040404" ratio="0.255399"/>
+							<s:GradientEntry color="#0C0C0C" ratio="0.336699"/>
+							<s:GradientEntry color="#1A1A1A" ratio="0.406926"/>
+							<s:GradientEntry color="#2F2F2F" ratio="0.474563"/>
+							<s:GradientEntry color="#4C4C4C" ratio="0.53646"/>
+							<s:GradientEntry color="#A1A1A1" ratio="0.648352"/>
+							<s:GradientEntry color="#5B5B5B" ratio="0.736974"/>
+							<s:GradientEntry color="#292929" ratio="0.825274"/>
+							<s:GradientEntry color="#0A0A0A" ratio="0.913183"/>
+							<s:GradientEntry ratio="1"/>
+						</s:LinearGradient>
+					</s:fill>
+				</s:Rect>
+				<s:Rect height="12" radiusX="1.99102" radiusY="1.99102" width="40" x="1.5" y="0.5">
+					<s:stroke>
+						<s:SolidColorStroke caps="none" color="#333333" joints="miter" miterLimit="4" weight="1"/>
+					</s:stroke>
+				</s:Rect>
+			</s:Group>
+			<s:Group alpha="0.56" blendMode="hardlight" d:id="11" x="3" y="6">
+				<s:Path data="M 36 0.5 C 36 0.775 35.55 1 35 1 L 1 1 C 0.45 1 0 0.775 0 0.5 C 0 0.225 0.45 0 1 0 L 35 0 C 35.55 0 36 0.225 36 0.5 Z" winding="nonZero" x="0" y="0.5">
+					<s:fill>
+						<s:SolidColor color="#FFFFFF"/>
+					</s:fill>
+				</s:Path>
+			</s:Group>
+			<s:Group alpha="0.56" blendMode="hardlight" d:id="12" x="14" y="1">
+				<s:Path data="M 14 0.5 C 14 0.775 13.55 1 13 1 L 1 1 C 0.45 1 0 0.775 0 0.5 C 0 0.225 0.45 0 1 0 L 13 0 C 13.55 0 14 0.225 14 0.5 Z" winding="nonZero" x="0" y="0">
+					<s:fill>
+						<s:SolidColor color="#FFFFFF"/>
+					</s:fill>
+				</s:Path>
+			</s:Group>
+		</s:Group>
+	</s:Graphic>
+</s:SkinnableContainer>

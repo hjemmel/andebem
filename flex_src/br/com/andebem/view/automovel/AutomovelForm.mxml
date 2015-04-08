@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form:CrudForm xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   formValueObjectClass="{Automovel}"
+			   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:form="crud.form.*" xmlns:targets="libutilflex.targets.*">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:StringValidator id="simpleStringValidator" property="text" />
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.domain.Automovel;
+			import br.com.andebem.model.AutomovelModel;
+			
+			[Inject]
+			[Bindable]
+			public var model:AutomovelModel;
+		]]>
+	</fx:Script>
+	<form:CrudFormItem label="Ano:" required="true"
+					   dataField="ano" targetControlValidator="{simpleStringValidator}">
+		
+		<targets:TargetTextInput id="tiAno" restrict="[0-9]" />
+		
+	</form:CrudFormItem>
+	
+	<form:CrudFormItem label="Placa:" required="true"
+					   dataField="placa" targetControlValidator="{simpleStringValidator}">
+		
+		<targets:TargetTextInput id="tiPlaca"  />
+		
+	</form:CrudFormItem>
+	
+	<form:CrudFormItem label="Chassi:"
+					   dataField="chassi" required="true">
+		
+		<targets:TargetTextInput id="tiChassi" />
+		
+	</form:CrudFormItem>
+	
+	<form:CrudFormItem label="Modelo:"
+					   dataField="modelo" required="true">
+		<targets:TargetComboBox id="cbModelo" width="150"
+								dataProvider="{model.listaModelos}" labelField="nome" prompt="Selecione"/>
+	</form:CrudFormItem>
+	
+	<form:CrudFormItem label="Categoria:"
+					   dataField="categoria" required="true">
+		<targets:TargetComboBox id="cbCategoria" width="150" 
+								dataProvider="{model.listaCategorias}" labelField="nome" prompt="Selecione"/>
+	</form:CrudFormItem>
+	
+	<form:CrudFormItem label="Preço:"
+					   dataField="preco" required="true">
+		
+		<targets:TargetTextInput id="tiPreco" />
+		
+	</form:CrudFormItem>
+	
+	<form:CrudFormItem label="Cor:"
+					   dataField="cor" required="true">
+		
+		<targets:TargetTextInput id="tiCor" />
+		
+	</form:CrudFormItem>
+	<form:CrudFormItem label="Combustível:"
+					   dataField="combustivel" required="true">
+		
+		<targets:TargetTextInput id="tiCombustivel" />
+		
+	</form:CrudFormItem>
+	
+	<form:CrudFormItem label="Renavam:"
+					   dataField="renavam">
+		
+		<targets:TargetTextInput id="tiRenavam" />
+		
+	</form:CrudFormItem>
+	<form:CrudFormItem label="Número da Nota"
+					   dataField="num_nota">
+		
+		<targets:TargetTextInput id="tiNumNota" />
+		
+	</form:CrudFormItem>
+	<form:CrudFormItem label="Número de Portas"
+					   dataField="num_portas" required="true">
+		
+		<targets:TargetTextInput id="tiNumPortas" />
+		
+	</form:CrudFormItem>
+</form:CrudForm>

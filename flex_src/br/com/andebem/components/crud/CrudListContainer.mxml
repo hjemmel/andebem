@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					  xmlns:s="library://ns.adobe.com/flex/spark" 
+					  xmlns:mx="library://ns.adobe.com/flex/mx"
+					  implements="crud.list.ICrudList"
+					  creationComplete="group1_creationCompleteHandler(event)"
+					  >
+	
+	<fx:Metadata>
+		[Event(name="change", type="spark.events.IndexChangeEvent")]
+		[Event(name="doubleClick",type="flash.events.MouseEvent")]
+		[Event(name="deleteAction",type="crud.events.CrudActionEvent")]
+	</fx:Metadata>
+	<fx:Script>
+		<![CDATA[
+			import crud.collection.CrudCollection;
+			import crud.collection.ICrudCollection;
+			import crud.events.CrudActionEvent;
+			
+			import libutilflex.util.ConvertUtil;
+			
+			import mx.core.EventPriority;
+			import mx.events.FlexEvent;
+			
+			import spark.components.DataGroup;
+			import spark.events.IndexChangeEvent;
+			
+			public function get allowMultipleSelection():Boolean
+			{
+				return list.allowMultipleSelection;
+			}
+			
+			[Bindable]
+			public function get crudDataProvider():ICrudCollection
+			{
+				return list.dataProvider as CrudCollection;
+			}
+
+			public function set crudDataProvider(value:ICrudCollection):void
+			{
+				if(value!=list.dataProvider)
+				{
+					list.dataProvider = value;
+				}
+			}
+			
+			public override function get doubleClickEnabled():Boolean
+			{
+				return (list!=null)? list.doubleClickEnabled:super.doubleClickEnabled;
+			}
+			
+			public function get selectedIndex():int
+			{
+				return list.selectedIndex;
+			}
+			
+			public function set selectedIndex(value:int):void
+			{
+				list.selectedIndex=value;
+			}
+			
+			public function get selectedItem():Object
+			{
+				return list.selectedItem;
+			}
+			
+			public function set selectedItem(value:Object):void
+			{
+				list.selectedItem=value;
+			}
+			
+			public function get selectedItems():Array
+			{
+				return ConvertUtil.vectorToArray(list.selectedItems);
+			}
+			
+			public function set selectedItems(value:Array):void
+			{
+				list.selectedItems = Vector.(value);
+			}
+			
+			public function get doubleClickEvent():String
+			{
+				return MouseEvent.DOUBLE_CLICK;
+			}
+			
+			public function get changeEvent():String
+			{
+				return IndexChangeEvent.CHANGE;
+			}
+
+			private function list_doubleClickHandler(event:MouseEvent):void
+			{
+				dispatchEvent(event);
+			}
+
+			private function list_changeHandler(event:IndexChangeEvent):void
+			{
+				dispatchEvent(event);
+			}
+
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				addEventListener(MouseEvent.DOUBLE_CLICK, onDoubleClick, true);
+			}
+
+			private function onDoubleClick(event:MouseEvent):void
+			{
+				if(event.target is DataGroup){
+					event.stopImmediatePropagation();
+				}
+			}
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:List id="list" 
+			doubleClick="list_doubleClickHandler(event)"
+			doubleClickEnabled="true"
+			borderVisible="false" width="100%" height="100%"
+			allowMultipleSelection="true"
+			contentBackgroundAlpha="0.0"
+			itemRenderer="br.com.andebem.components.itemrenderer.DeleteCrudItemRenderer"
+			change="list_changeHandler(event)">
+			<!--selectionColor="#F7F7F7"
+			rollOverColor="#F7F7F7"
+			change="list_changeHandler(event)">-->
+		<s:layout>
+			<s:VerticalLayout 	useVirtualLayout="true"
+								paddingBottom="2" 
+								paddingTop="2" 
+								paddingLeft="2" 
+								paddingRight="2"
+								/>
+		</s:layout>
+	</s:List>
+			
+</s:Group>

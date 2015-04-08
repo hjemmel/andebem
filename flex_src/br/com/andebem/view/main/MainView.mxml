@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:view="br.com.andebem.view.*"
+					  creationComplete="skinnablecontainer1_creationCompleteHandler(event)" xmlns:fx="http://ns.adobe.com/mxml/2009"
+					  xmlns:s="library://ns.adobe.com/flex/spark" xmlns:components="br.com.andebem.components.*"
+					  xmlns:helper="br.com.andebem.helper.*" xmlns:login="br.com.andebem.view.login.*"
+					  xmlns:automovel="br.com.andebem.view.automovel.*" xmlns:main="br.com.andebem.view.main.*"
+					  xmlns:relatorio="br.com.andebem.view.relatorio.*" xmlns:cadastros="br.com.andebem.view.cadastros.*" xmlns:locacao="br.com.andebem.view.locacao.*">
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.assets.skins.MainBodySkin;
+			import br.com.andebem.domain.FlexMessageException;
+			import br.com.andebem.presentation.MainPresentationModel;
+			
+			import mx.controls.Alert;
+			import mx.core.INavigatorContent;
+			import mx.events.DynamicEvent;
+			import mx.events.FlexEvent;
+			
+			private function skinnablecontainer1_creationCompleteHandler(event:FlexEvent):void
+			{
+				effects.componentShow.play([login]);
+			}
+			
+			private function login_loginSucessHandler(event:Event):void
+			{
+				currentState = "loggedIn";
+			}
+			
+			[Inject]
+			[Bindable]
+			public var mainPM:MainPresentationModel;
+			
+			protected function linkbutton1_clickHandler(event:MouseEvent):void
+			{
+				navigateToURL(new URLRequest("javascript:location.reload(true)"), "_self");
+			}
+			
+			protected function menuheader1_mudarTelaHandler(event:DynamicEvent):void
+			{
+				vsMain.selectedChild = vsMain.getChildByName(event.view) as INavigatorContent;
+			}
+			
+			[EventHandler("RPCFaultEvent.RPC_FAULT_EVENT", properties="exception")]
+			public function erroManager(exception:FlexMessageException):void
+			{
+				Alert.show(exception.message, "Erro");
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<helper:Effects id="effects" />
+	</fx:Declarations>
+
+	<s:states>
+		<s:State name="loggedOut" />
+		<s:State name="loggedIn" />
+	</s:states>
+
+	<login:LoginBox id="login" height="300"
+					includeIn="loggedOut" width="300"
+					horizontalCenter="0" verticalCenter="0"
+					loginSucess="login_loginSucessHandler(event)" />
+
+	<main:MenuHeader height="60" height.loggedOut="0"
+					 left="5" right="5" tipoUsuario="{mainPM.appModel.usuario.tipoUsuario}"
+					 nomeUsuario="{mainPM.appModel.usuario.nome}"
+					 top="-1" skinClass="br.com.andebem.assets.skins.HeaderSkin"
+					 visible.loggedOut="false" mudarTela="menuheader1_mudarTelaHandler(event)" />
+
+	<s:SkinnableContainer bottom="5" left="5"
+						  right="5" top="5"
+						  top.loggedIn="70" includeIn="loggedIn"
+						  skinClass="br.com.andebem.assets.skins.MainBodySkin">
+		<!--<automovel:AutomovelOld width="100%" height="100%" />-->
+		<mx:ViewStack id="vsMain" width="100%" height="100%">
+			<s:NavigatorContent id="automovel">
+				<automovel:AutomovelCrud bottom="5" left="5" right="5" top="5" />
+			</s:NavigatorContent>
+			<cadastros:CadastrosIndex bottom="5" left="5" right="5" top="5" id="cadastros"/>
+			<relatorio:MainRelatorio bottom="5" left="5"
+									 right="5" top="5"
+									 id="relatorio" />
+			<locacao:LocacaoView bottom="5" left="5" right="5" top="5" id="locacao"/>
+		</mx:ViewStack>
+	</s:SkinnableContainer>
+</s:SkinnableContainer>

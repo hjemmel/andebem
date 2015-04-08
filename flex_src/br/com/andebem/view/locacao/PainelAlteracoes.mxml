@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" 
+		  xmlns:helper="br.com.andebem.helper.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.domain.Alteracao;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.ValidationResultEvent;
+			
+			[Bindable]
+			public var provider:ArrayCollection;
+			
+			private function changeStack():void
+			{
+				alteracaoStack.selectedIndex = (alteracaoStack.selectedIndex == 0) ? 1 : 0;
+			}
+
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+					alteracao.text = '';
+					alteracao.errorString = '';
+					changeStack();
+			}
+
+
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				var result:ValidationResultEvent = alteracaoValidator.validate();
+				
+				if(result.type == ValidationResultEvent.VALID)
+				{
+					
+					provider ||= new ArrayCollection();
+					provider.addItem(new Alteracao({descricao: alteracao.text, isNew: true}));
+					
+					changeStack();
+					alteracao.text = '';
+				}
+			}
+
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<helper:Effects id="effects" />
+		<mx:StringValidator id="alteracaoValidator"
+							source="{alteracao}"
+							property="text"
+							required="true"
+							requiredFieldError="Preencha a Alteração!"/>
+	</fx:Declarations>
+
+	<mx:ViewStack id="alteracaoStack" width="100%" height="100%">
+		<s:NavigatorContent hideEffect="{effects.phaseFlipUpOut}" showEffect="{effects.phaseFlipUpIn}">
+			<mx:DataGrid id="dgTask" width="100%" height="100%" dataProvider="{provider}">
+				<mx:columns>
+					<mx:DataGridColumn headerText="Descrição" dataField="descricao" />
+					<mx:DataGridColumn headerText="Manutenção" textAlign="center" dataField="ativa" width="100" 
+									   itemRenderer="br.com.andebem.components.itemrenderer.DefaultCheckBoxRenderer" />
+					<mx:DataGridColumn textAlign="center" dataField="ativa" width="50" headerText="Remover"
+									   itemRenderer="br.com.andebem.components.itemrenderer.RemoveRenderer" />
+				</mx:columns>
+			</mx:DataGrid>
+		</s:NavigatorContent>
+		<s:NavigatorContent hideEffect="{effects.phaseFlipUpOut}" showEffect="{effects.phaseFlipUpIn}" width="100%" height="100%">
+			<s:SkinnableContainer width="100%" height="100%">
+				<s:layout>
+					<s:HorizontalLayout verticalAlign="middle" />
+				</s:layout>
+				<s:TextInput width="100%" id="alteracao" />
+				<s:Button label="Adicionar" width="80" click="button2_clickHandler(event)" />
+				<s:Button label="Cancelar" width="80" click="button1_clickHandler(event)"  />
+			</s:SkinnableContainer>
+		</s:NavigatorContent>
+	</mx:ViewStack>
+	<s:Button 
+		height="30" width="100"
+		label="Adicionar" enabled="{alteracaoStack.selectedIndex == 0}"
+		click="changeStack()" />
+
+</s:VGroup>

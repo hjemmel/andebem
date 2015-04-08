@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<crud:PodCrudTemplate xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					  xmlns:s="library://ns.adobe.com/flex/spark" 
+					  xmlns:mx="library://ns.adobe.com/flex/mx" 
+					  xmlns:crud="br.com.andebem.components.crud.*"
+					  labelCrud="Modelo"
+					  valueObjectClass="{Modelo}"
+					  crudDataProvider="{pm.model.listaModelos}"
+					  creationComplete="podCreationCompleteHandler(event)"
+					  createAction="pm.dispatchCreate(event)"
+					  updateAction="pm.dispatchUpdate(event)"
+					  deleteAction="pm.dispatchDelete(event)" 
+					  xmlns:form="crud.form.*" xmlns:spark="libutilflex.targets.spark.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.domain.Modelo;
+			import br.com.andebem.presentation.ModeloPresentationModel;
+			
+			import mx.events.FlexEvent;
+			
+			[Inject]
+			[Bindable]
+			public var pm:ModeloPresentationModel;
+
+			protected function podCreationCompleteHandler(event:FlexEvent):void
+			{
+				pm.dispatchList();
+			}
+
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:StringValidator id="stringValidator" property="text" />
+		<mx:NumberValidator id="comboValidator" property="selectedIndex" 
+							minValue="0" allowNegative="false" 
+							negativeError="Selecione uma opção"
+							lowerThanMinError="Selecione uma opção"/>
+	</fx:Declarations>
+	
+	<crud:formItems>
+		<form:CrudFormItem label="Nome: " targetControlValidator="{stringValidator}" dataField="nome" required="true">
+			<spark:TargetTextInput id="nome" maxChars="30" width="130"/>
+		</form:CrudFormItem>
+		<form:CrudFormItem label="Marca: " dataField="marca" targetControlValidator="{comboValidator}" required="true">
+			<spark:TargetDropDownList labelField="nome"
+									  keyFields="[id]" dataProvider="{pm.marcaModel.listaMarcas}"
+									  width="130" prompt="Selecione..." />
+		</form:CrudFormItem>
+	</crud:formItems>
+</crud:PodCrudTemplate>

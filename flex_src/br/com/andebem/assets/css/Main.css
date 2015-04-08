@@ -1,0 +1,79 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+@namespace controls "br.com.andebem.components.controls.*";
+@namespace skins "br.com.andebem.assets.skins.*";
+@namespace relatorio "br.com.andebem.view.relatorio.*";
+
+
+
+s|Application {
+	font-family: Arial;
+	background-color: #B8C1C8;
+}
+
+global
+{
+	content-background-alpha: 1.0;
+	color: #545454;
+	modal-transparency: 0.8;
+	modal-transparency-color: #2D587A;
+	modal-transparency-duration: 600;
+}
+
+mx|DataGrid {
+	alternatingItemColors: #e6e6e6, #dddddd;
+	horizontalGridLines: true;
+	verticalGridLines: true;
+	rollOverColor: #7295b1;
+	selectionColor: #7295b1;
+	text-selected-color: #ffffff;
+	text-roll-over-color:	#ffffff;
+	font-weight: bold;
+	headerStyleName: "mydataGridHeaderStyle";
+	header-background-skin: ClassReference("br.com.andebem.assets.skins.DataGridHeaderBackgroundSkin");
+	sort-arrow-skin: Embed(source='../images/seta_down.png');
+}
+
+s|Button {
+	skin-class: ClassReference("br.com.andebem.assets.skins.ButtonSilverSkin");
+}
+
+s|TextInput
+{
+	skin-class: ClassReference("br.com.andebem.assets.skins.CustomTextInputSkin");
+}
+
+s|DropDownList
+{
+	skin-class: ClassReference("br.com.andebem.assets.skins.dropdown.RequiredDropDownListSkin");
+}
+
+.textLeft
+{
+	font-weight: bold;
+	color: #666666;
+	text-align: left;
+}
+
+.mydataGridHeaderStyle {
+	color: #ffffff;
+	fontWeight: bold;
+}
+
+.weblink
+{
+	color:blue;
+	text-decoration:underline;
+}
+
+/* Default Skin component */
+controls|SuperTextInput{
+	skin-class: ClassReference("br.com.andebem.assets.skins.SuperTextInputSkin");
+}
+
+relatorio|RelatorioMenu
+{
+	skin-class: ClassReference("br.com.andebem.assets.skins.DestaqueSkin");
+	color: #828282;
+}

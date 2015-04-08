@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RelSubFormularioInspecao" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="borda" backcolor="#000000">
+		<box>
+			<pen lineWidth="0.25"/>
+			<topPen lineWidth="0.25"/>
+			<leftPen lineWidth="0.25"/>
+			<bottomPen lineWidth="0.25"/>
+			<rightPen lineWidth="0.25"/>
+		</box>
+	</style>
+	<field name="descricao" class="java.lang.String"/>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<frame>
+				<reportElement style="borda" x="0" y="0" width="555" height="20" forecolor="#FFFFFF" backcolor="#FFFFFF"/>
+			</frame>
+			<textField>
+				<reportElement x="0" y="2" width="555" height="17"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{descricao}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="42">
+			<frame>
+				<reportElement style="borda" x="0" y="0" width="555" height="42"/>
+				<frame>
+					<reportElement style="borda" mode="Transparent" x="0" y="0" width="391" height="24"/>
+					<staticText>
+						<reportElement x="2" y="5" width="37" height="15"/>
+						<textElement/>
+						<text><![CDATA[Cliente:]]></text>
+					</staticText>
+				</frame>
+				<frame>
+					<reportElement style="borda" mode="Transparent" x="391" y="0" width="164" height="24"/>
+					<staticText>
+						<reportElement x="1" y="5" width="34" height="15"/>
+						<textElement/>
+						<text><![CDATA[Data:]]></text>
+					</staticText>
+					<textField pattern="dd/MM/yyyy HH.mm.ss">
+						<reportElement x="35" y="4" width="129" height="20"/>
+						<textElement/>
+						<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+					</textField>
+				</frame>
+				<staticText>
+					<reportElement x="2" y="26" width="47" height="15"/>
+					<textElement/>
+					<text><![CDATA[Avaliador:]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnFooter>
+</jasperReport>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:relatorio="br.com.andebem.view.relatorio.*">
+	<fx:Metadata>
+		[Event(name="filtrarRelatorio",type="br.com.andebem.event.RelatorioEvent")]
+	</fx:Metadata>
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.assets.Assets;
+			import br.com.andebem.assets.skins.MenuBackgroundSkin;
+			import br.com.andebem.assets.skins.MenuSkin;
+			import br.com.andebem.event.RelatorioEvent;
+			
+			import mx.collections.ArrayCollection;
+			
+			[Bindable]
+			public var listaRelatorio:ArrayCollection = new ArrayCollection();
+
+			/* protected function filtrosrelatorio1_filtrarRelatorioHandler(event:RelatorioEvent):void
+			{
+				dispatchEvent(event);
+			} */
+
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:SeriesInterpolate id="eff"/>
+	</fx:Declarations>
+
+	<s:VGroup width="100%" height="100%">
+		<s:Group width="100%" height="100%">
+			<s:layout>
+				<s:VerticalLayout gap="-1" />
+			</s:layout>
+
+			<s:ButtonBar id="bb" dataProvider="{vsChart}"
+						 skinClass="br.com.andebem.assets.skins.MenuSkin" depth="1"
+						 requireSelection="true" />
+			<s:SkinnableContainer width="100%" height="100%" depth="0">
+				<s:Rect width="100%" height="100%"
+						bottomLeftRadiusX="5" bottomLeftRadiusY="5"
+						bottomRightRadiusX="5" bottomRightRadiusY="5"
+						topRightRadiusX="5" topRightRadiusY="5">
+					<s:fill>
+						<s:SolidColor color="0xEBEBEB" />
+					</s:fill>
+					<s:stroke>
+						<s:SolidColorStroke color="0xFFFFFF" />
+					</s:stroke>
+				</s:Rect>
+				<mx:ViewStack id="vsChart" width="100%" height="100%">
+					<s:NavigatorContent label="Gráfico de Barra" width="100%" height="100%">
+						<s:layout>
+							<s:HorizontalLayout paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10" />
+						</s:layout>
+						<mx:ColumnChart id="cChart" dataProvider="{listaRelatorio}"
+										showDataTips="true" width="100%"
+										height="100%">
+							<mx:horizontalAxis>
+								<mx:CategoryAxis dataProvider="{listaRelatorio}" categoryField="label" />
+							</mx:horizontalAxis>
+							<mx:series>
+								<mx:ColumnSeries xField="label" yField="value" showDataEffect="{eff}" />
+							</mx:series>
+						</mx:ColumnChart>
+					</s:NavigatorContent>
+					<s:NavigatorContent label="Gráfico de Pizza" width="100%" height="100%">
+						<s:layout>
+							<s:HorizontalLayout paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10" />
+						</s:layout>
+						<mx:PieChart id="pieChart" dataProvider="{listaRelatorio}"
+									 showDataTips="true" width="100%"
+									 height="100%">
+							<mx:series>
+								<mx:PieSeries field="value" nameField="label" showDataEffect="{eff}" labelPosition="outside" />
+							</mx:series>
+						</mx:PieChart>
+					</s:NavigatorContent>
+					<s:NavigatorContent label="Tabela" width="100%" height="100%">
+						<mx:DataGrid top="10" bottom="10"
+									 left="10" right="10"
+									 dataProvider="{listaRelatorio}">
+							<mx:columns>
+								<mx:DataGridColumn headerText="Label" dataField="label" />
+								<mx:DataGridColumn headerText="Valor" dataField="value" />
+							</mx:columns>
+						</mx:DataGrid>
+					</s:NavigatorContent>
+				</mx:ViewStack>
+			</s:SkinnableContainer>
+		</s:Group>
+	</s:VGroup>
+
+</s:SkinnableContainer>

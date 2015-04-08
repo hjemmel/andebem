@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE relatorios>
+<relatorios>
+	<relatorio label="Quantidade de carros locados em determinado período" service="listaLocacoesPorMes"/>
+	<relatorio label="Estatística de modelos de carros mais alugados" service="listaLocacoesPorModelo"/>
+	<relatorio label="Quantidade de Locações por Cliente" service="listaLocacoesPorCliente"/>
+	<relatorio label="Quantidade de carros em manutenção com tempo superior a X dias" service=""/>
+	<relatorio label="KM média da frota de veículos" service=""/>
+	<relatorio label="Relação de veículos com KM acima de X KM" service=""/>
+</relatorios>

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultcrudtemplate:DefaultCrudTemplate xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+										 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:defaultcrudtemplate="crud.templates.defaultcrudtemplate.*"
+										 xmlns:form="crud.form.*" xmlns:targets="libutilflex.targets.*"
+										 formHeadingTitle="Cadastro de Automóveis" listControlDataProvider="{pm.model.listaAutomoveis}"
+										 btnPrintVisible="false" btnPrintIncludeInLayout="false"
+										 listControlColumnsIndexNotToHide="[0, 1, 2, 5]" creationComplete="defaultcrudtemplate1_creationCompleteHandler(event)"
+										 searchAction="crudSearchActionHandler(event)" createAction="crudCreateActionHandler(event)"
+										 updateAction="crudUpdateActionHandler(event)" deleteAction="pm.dispatchDelete(event)"
+										 formValueObjectClass="{Automovel}" xmlns:automovel="br.com.andebem.view.automovel.*"
+										 xmlns:spark="libutilflex.targets.spark.*" xmlns:searchform="crud.templates.defaultcrudtemplate.searchform.*" xmlns:extendedform="libutilflex.extendedform.*" xmlns:filter="br.com.andebem.components.crud.filter.*">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:StringValidator id="simpleStringValidator" property="text" />
+		<mx:NumberValidator id="comboValidator" property="selectedIndex"
+							minValue="0" allowNegative="false"
+							negativeError="Selecione uma opção" lowerThanMinError="Selecione uma opção" />
+	</fx:Declarations>
+
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.components.crud.filter.FilterUtil;
+			import br.com.andebem.domain.Automovel;
+			import br.com.andebem.domain.Status;
+			import br.com.andebem.helper.AndebemConstants;
+			import br.com.andebem.presentation.AutomovelPresentationModel;
+			
+			import crud.events.CrudActionEvent;
+			import crud.templates.defaultcrudtemplate.searchform.DefaultCrudSearchForm;
+			import crud.templates.defaultcrudtemplate.searchform.events.DefaultCrudSearchFormActionEvent;
+			
+			import libutilflex.messenger.DefaultMessenger;
+			import libutilflex.util.NumberUtil;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			
+			[Inject]
+			[Bindable]
+			public var pm:AutomovelPresentationModel;
+			
+			override protected function formInvalidHandler():void
+			{
+				var messenger:DefaultMessenger = new DefaultMessenger();
+				messenger.messengerParent = formArea;
+				messenger.warning("Todos os campos são obrigatórios!");
+			}
+			
+			//--------------------------------------------------------------------------
+			
+			private function crudSearchActionHandler(event:DefaultCrudSearchFormActionEvent):void
+			{
+				var searchValue:String = event.data[DefaultCrudSearchForm.SEARCH_VALUE] as String;
+				
+				Alert.show("Procurando por: " + searchValue);
+			}
+			
+			private function crudCreateActionHandler(event:CrudActionEvent):void
+			{
+				var newItem:Automovel = event.data as Automovel;
+				newItem.data_compra = new Date();
+				newItem.data_insert = new Date();
+				newItem.usuario = pm.appModel.usuario;
+				newItem.status = AndebemConstants.DISPONIVEL_STATUS;
+				event.data = newItem;
+				pm.dispatchCreate(event)
+				//listControl.crudDataProvider.executeAction(newItem);
+			}
+			
+			private function crudUpdateActionHandler(event:CrudActionEvent):void
+			{
+				var updateItem:Automovel = event.data as Automovel;
+				updateItem.data_update = new Date();
+				event.data = updateItem;
+				
+				pm.dispatchUpdate(event);
+			}
+			
+			[Bindable]
+			public var statusProvider:ArrayCollection = new ArrayCollection();
+			
+			protected function defaultcrudtemplate1_creationCompleteHandler(event:FlexEvent):void
+			{
+				pm.listarCategorias();
+				pm.listarModelos();
+				pm.listarCombustiveis();
+				pm.dispatchList();
+				
+				if( pm.acessorioModel.listAcessorios==null || pm.acessorioModel.listAcessorios.length<1 )
+				{
+					pm.listarAcessorios();
+				}
+				
+				statusProvider.addItem(AndebemConstants.DISPONIVEL_STATUS);
+				statusProvider.addItem(AndebemConstants.LOCACAO_STATUS);
+				statusProvider.addItem(AndebemConstants.PASSIVO_LOCACAO_STATUS);
+				statusProvider.addItem(AndebemConstants.MANUTENCAO_STATUS);
+			}
+			
+			private function numberGetDataFunction():Object
+			{
+				return NumberUtil.convertToNumber(tiPreco.text);
+			}
+			
+			private function collecitonGetDataFunction():Object
+			{
+				return new ArrayCollection(dgOpcionais.selectedItems);
+			}
+			
+			private function collectionDisplayFunction(value:Object):void
+			{
+				if( value != null )
+					fiOpcional.display(ArrayCollection(value));
+			}
+		]]>
+	</fx:Script>
+	
+	<defaultcrudtemplate:searchForm>
+		<extendedform:ExtendedForm formValueObjectClass="{Object}" id="searchFormAutomovel">
+			<extendedform:ExtendedFormItem label="Modelo: ">
+				<filter:FilterTargetDropDownList  width="150" field="modeloLabel"
+										  dataProvider="{pm.model.listaModelos}" labelField="label"
+										  prompt="Selecione..." />
+			</extendedform:ExtendedFormItem>
+			<extendedform:ExtendedFormItem label="Ano: ">
+				<filter:FilterTargetTextInput width="150" field="ano"/>
+			</extendedform:ExtendedFormItem>
+			<extendedform:ExtendedFormItem label="Combustivel: ">
+				<filter:FilterTargetTextInput width="150" field="combustivel"/>
+			</extendedform:ExtendedFormItem>
+			<extendedform:ExtendedFormItem dataField="status" label="Status: ">
+				<filter:FilterTargetDropDownList  width="150"
+										   dataProvider="{statusProvider}"
+										  labelField="nome"
+										  field="statusLabel"
+										  prompt="Selecione..."/>
+			</extendedform:ExtendedFormItem>
+			<mx:FormItem direction="horizontal">
+				<s:Button id="btnSearch"
+						  label="Procurar" 
+						  click="FilterUtil.filter(pm.model.listaAutomoveis, searchFormAutomovel)"/>
+				<s:Button id="btnClean"
+						  label="Limpar"
+						  click="FilterUtil.clean(pm.model.listaAutomoveis, searchFormAutomovel)"/>
+			</mx:FormItem>
+		</extendedform:ExtendedForm>
+	</defaultcrudtemplate:searchForm>
+
+	<defaultcrudtemplate:listControlColumns>
+
+		<mx:DataGridColumn headerText="Modelo (Marca)" dataField="modelo.label" width="200" />
+		<mx:DataGridColumn headerText="Ano" dataField="ano" />
+		<mx:DataGridColumn headerText="Placa" dataField="placa" />
+		<mx:DataGridColumn headerText="Chassi" dataField="chassi" />
+		<mx:DataGridColumn headerText="Cor" dataField="cor" />
+		<mx:DataGridColumn headerText="Combustível" dataField="combustivel.nome" />
+		<mx:DataGridColumn headerText="Status" dataField="status.nome" />
+
+	</defaultcrudtemplate:listControlColumns>
+	<!--<defaultcrudtemplate:formControl>
+		 <automovel:AutomovelForm  height="100%"  id="formControl"/>
+		 </defaultcrudtemplate:formControl>-->
+	<defaultcrudtemplate:formItems>
+		<form:CrudFormItem label="Ano:" required="true" dataField="ano" targetControlValidator="{simpleStringValidator}">
+			<targets:TargetTextInput id="tiAno" restrict="[0-9]" maxChars="4" />
+		</form:CrudFormItem>
+
+		<form:CrudFormItem label="Placa:" required="true" dataField="placa" targetControlValidator="{simpleStringValidator}">
+			<targets:TargetTextInput id="tiPlaca" maxChars="7" />
+		</form:CrudFormItem>
+
+		<form:CrudFormItem label="Chassi:" dataField="chassi" required="true" targetControlValidator="{simpleStringValidator}">
+			<targets:TargetTextInput id="tiChassi" maxChars="17" />
+		</form:CrudFormItem>
+
+		<form:CrudFormItem label="Modelo:" dataField="modelo" required="true" targetControlValidator="{comboValidator}">
+			<spark:TargetDropDownList id="cbModelo" width="150"
+									  dataProvider="{pm.model.listaModelos}" labelField="label"
+									  prompt="Selecione..." />
+		</form:CrudFormItem>
+
+		<form:CrudFormItem label="Categoria:" dataField="categoria" required="true" targetControlValidator="{comboValidator}">
+			<spark:TargetDropDownList id="cbCategoria" width="150"
+									  dataProvider="{pm.model.listaCategorias}" labelField="nome"
+									  prompt="Selecione..." />
+		</form:CrudFormItem>
+
+		<form:CrudFormItem label="Preço:" dataField="preco" required="true" getDataFunction="{numberGetDataFunction}">
+			<spark:TargetNumberTextInput id="tiPreco" />
+		</form:CrudFormItem>
+
+		<form:CrudFormItem label="Cor:" dataField="cor" required="true" targetControlValidator="{simpleStringValidator}">
+
+			<targets:TargetTextInput id="tiCor" />
+
+		</form:CrudFormItem>
+		<form:CrudFormItem label="Combustível:" dataField="combustivel" required="true" targetControlValidator="{comboValidator}">
+			<spark:TargetDropDownList id="ddlCombustivel" width="150"
+									  dataProvider="{pm.model.listaCombustiveis}" labelField="nome"
+									  prompt="Selecione..." />
+		</form:CrudFormItem>
+
+		<form:CrudFormItem label="Renavam:" dataField="renavam">
+			<targets:TargetTextInput id="tiRenavam" />
+		</form:CrudFormItem>
+
+		<form:CrudFormItem label="Número da Nota" dataField="num_nota">
+			<targets:TargetTextInput id="tiNumNota" />
+		</form:CrudFormItem>
+
+		<form:CrudFormItem label="Número de Portas" dataField="numeroPortas">
+			<spark:TargetNumericStepper minimum="2" stepSize="1" maximum="4" id="nsNumPortas" />
+		</form:CrudFormItem>
+		<form:CrudFormItem id="fiOpcional" label="Opcionais" dataField="acessorios" getDataFunction="collecitonGetDataFunction">
+			<targets:TargetDataGrid dataProvider="{pm.acessorioModel.listAcessorios}" allowMultipleSelection="true" id="dgOpcionais">
+				<targets:columns>
+					<mx:DataGridColumn dataField="nome" headerText="Opcional" />
+				</targets:columns>
+			</targets:TargetDataGrid>
+		</form:CrudFormItem>
+	</defaultcrudtemplate:formItems>
+
+</defaultcrudtemplate:DefaultCrudTemplate>

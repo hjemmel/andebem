@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Metadata>
+		[Event(name="mudarTela",type="mx.events.DynamicEvent")]
+	</fx:Metadata>
+
+
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.assets.skins.BlueButtonSkin;
+			
+			import flash.net.navigateToURL;
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				navigateToURL(new URLRequest("javascript:location.reload(true)"), "_self");
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.domain.TipoUsuario;
+			import br.com.andebem.helper.AndebemConstants;
+			
+			import mx.events.DynamicEvent;
+			
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			public var nomeUsuario:String;
+			
+			private var _tipoUsuario:TipoUsuario;
+			private var tipoUsuarioChanged:Boolean = false;
+			
+			[Bindable]
+			public function get tipoUsuario():TipoUsuario
+			{
+				return _tipoUsuario;
+			}
+			
+			public function set tipoUsuario(value:TipoUsuario):void
+			{
+				if( value!=_tipoUsuario )
+				{
+					tipoUsuarioChanged=true;
+					_tipoUsuario = value;
+				}
+			}
+			
+			
+			protected override function commitProperties():void
+			{
+				super.commitProperties();
+				
+				if( tipoUsuarioChanged )
+				{
+					tipoUsuarioChanged=false;
+					
+					var evt:DynamicEvent = new DynamicEvent("mudarTela");
+					
+					switch (tipoUsuario.id)
+					{
+						case AndebemConstants.GERENTE.id:
+						{
+							menu.dataProvider = arrayMenuGerente;
+							break;
+						}
+						
+						case AndebemConstants.USUARIO.id:
+						{
+							menu.dataProvider = arrayMenuUsuario;
+							
+							evt.view = "automovel";
+							dispatchEvent(evt);
+							
+							break;
+						}
+							
+						case AndebemConstants.ATENDENTE.id:
+						{
+							menu.dataProvider = arrayMenuAtendente;
+							
+							evt.view = "locacao";
+							dispatchEvent(evt);
+							
+							break;
+						}
+					}
+				}
+			}
+			
+			
+			protected function buttonbar1_changeHandler(event:IndexChangeEvent):void
+			{
+				var evt:DynamicEvent = new DynamicEvent("mudarTela");
+				evt.view = menu.selectedItem.view;
+				dispatchEvent(evt);
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+
+		<s:ArrayList id="arrayMenuGerente">
+			<fx:Object label="Automovel" view="automovel" />
+			<fx:Object label="Cadastros" view="cadastros" />
+			<fx:Object label="Locação" view="locacao" />
+			<fx:Object label="Relatório" view="relatorio" />
+		</s:ArrayList>
+		
+		<s:ArrayList id="arrayMenuUsuario">
+			<fx:Object label="Automovel" view="automovel" />
+			<fx:Object label="Cadastros" view="cadastros" />
+		</s:ArrayList>
+		
+		<s:ArrayList id="arrayMenuAtendente">
+			<fx:Object label="Locação" view="locacao" />
+		</s:ArrayList>
+	</fx:Declarations>
+
+	<s:HGroup verticalCenter="0" left="5" right="5" verticalAlign="middle">
+		
+	<s:ButtonBar 
+				 requireSelection="true" id="menu"
+				 change="buttonbar1_changeHandler(event)" skinClass="br.com.andebem.assets.skins.BlueButtoBarSkin" />
+	
+		
+		<mx:Spacer width="100%"/>
+		
+		<s:VGroup>
+				
+			<s:HGroup>
+				
+				<s:Label  color="#FFFFFF" fontSize="12" fontWeight="bold" text="Usuário: " width="70">
+					<s:filters>
+						<s:DropShadowFilter color="#333333"
+											distance="1" angle="90" alpha="0.76"/>
+					</s:filters>
+				</s:Label>
+				<s:Label  color="#FFFFFF" fontSize="12" fontWeight="bold" text="{nomeUsuario}">
+					<s:filters>
+						<s:DropShadowFilter color="#333333"
+											distance="1" angle="90" alpha="0.76"/>
+					</s:filters>
+				</s:Label>
+			</s:HGroup>
+			<s:HGroup>
+				<s:Label  color="#FFFFFF" fontSize="12" fontWeight="bold" text="Tipo: " width="70">
+					<s:filters>
+						<s:DropShadowFilter color="#333333"
+											distance="1" angle="90" alpha="0.76"/>
+					</s:filters>
+				</s:Label>
+				<s:Label color="#FFFFFF" fontSize="12" fontWeight="bold" text="{tipoUsuario.nome}">
+					<s:filters>
+						<s:DropShadowFilter color="#333333"
+											distance="1" angle="90" alpha="0.76"/>
+					</s:filters>
+				</s:Label>
+			</s:HGroup>
+		</s:VGroup>
+		<s:Button label="Deslogar" skinClass="br.com.andebem.assets.skins.BlueButtonSkin" click="button1_clickHandler(event)"/>
+	</s:HGroup>
+
+</s:SkinnableContainer>

@@ -1,0 +1,14 @@
+WebContent/WEB-INF/classes/**/*
+WebContent/WEB-INF/classes/*
+WebContent/*.swf
+WebContent/**.swf
+WebContent/*.html
+WebContent/**.html
+WebContent/*.js
+WebContent/**.js
+WebContent/br/**/*
+WebContent/br/*
+WebContent/history/**/*
+WebContent/history/*
+Thumbs.db
+.DS_STORE

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+    ADOBE SYSTEMS INCORPORATED
+    Copyright 2008 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: Adobe permits you to use, modify, and distribute this file
+    in accordance with the terms of the license agreement accompanying it.
+ 
+--> 
+<!--- The default skin class for the Spark DropDownList component. 
+      The skin for the anchor button for a DropDownList component 
+      is defined by the DropDownListButtonSkin class.  
+      
+      <p>In a custom skin class that uses transitions, set the 
+      <code>itemDestructionPolicy</code> property to <code>none</code>
+      for the PopUpAnchor defined by the popUp property.</p>      
+        
+      @see spark.components.DropDownList        
+      @see spark.skins.spark.DropDownListButtonSkin
+        
+      @langversion 3.0
+      @playerversion Flash 10
+      @playerversion AIR 1.5
+      @productversion Flex 4
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:fb="http://ns.adobe.com/flashbuilder/2009" alpha.disabled=".5"> 
+	<fx:Metadata>[HostComponent("spark.components.DropDownList")]</fx:Metadata>
+
+    <s:states>
+        <s:State name="normal" />
+        <s:State name="open" />
+        <s:State name="disabled" />
+    </s:states>
+    
+    <!--- 
+        The PopUpAnchor control that opens the drop-down list. 
+        
+        <p>In a custom skin class that uses transitions, set the 
+        <code>itemDestructionPolicy</code> property to <code>none</code>.</p>
+    -->
+    <s:PopUpAnchor id="popUp"  displayPopUp.normal="false" displayPopUp.open="true" includeIn="open"
+        left="0" right="0" top="0" bottom="0" itemDestructionPolicy="auto"
+        popUpPosition="below" popUpWidthMatchesAnchorWidth="false" >
+		<s:postLayoutTransformOffsets>
+			<s:TransformOffsets y="5"/>
+		</s:postLayoutTransformOffsets>
+        
+        <!--- 
+              This includes borders, background colors, scrollers, and filters.
+              @copy spark.components.supportClasses.DropDownListBase#dropDown
+        -->
+        <s:Group id="dropDown" minWidth="200" width="{rect.width}" height="100%">
+        
+            <!--- @private -->
+			<s:RectangularDropShadow id="dropShadow" blurX="10" blurY="10" alpha="0.45" distance="4" 
+									 angle="90" color="#000000" width="100%" height="100%"
+									 brRadius="5" blRadius="5" tlRadius="5" trRadius="5"/>
+        
+			<!-- border -->
+			<!--- @private -->
+			<s:Rect id="border" left="0" right="0" top="0" bottom="0"
+					alpha="0.9" 
+					radiusX="5" radiusY="5">
+				<s:fill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry ratio="0" color="#FFFFFF"/>
+						<s:GradientEntry ratio="1" color="#CDCDCD"/>
+					</s:LinearGradient>
+				</s:fill>
+			</s:Rect>
+            
+            <!--- @private -->
+            <s:Scroller id="scroller" height="100%" width="100%" hasFocusableChildren="false" minViewportInset="1" maxHeight="300">
+                <s:Group width="100%">
+					<!--- @copy spark.components.SkinnableDataContainer#dataGroup-->
+					<s:DataGroup id="dataGroup" top="0" width="100%">
+						<s:layout>
+							<s:VerticalLayout gap="0" horizontalAlign="contentJustify" 
+											  requestedMinRowCount="1" />
+						</s:layout>
+						
+						<s:itemRenderer>
+							<fx:Component>
+								<s:ItemRenderer autoDrawBackground="false">
+									<s:states>
+										<s:State name="normal"/>
+										<s:State name="selected"/>
+										<s:State name="hovered"/>
+									</s:states>
+									
+									<s:Rect width="100%" height="100%" includeIn="hovered,selected" alpha=".3">
+										<s:fill>
+											<s:SolidColor color="#2D587A" alpha="0.7"/>
+										</s:fill>
+									</s:Rect>
+									<s:RichText id="labelDisplay" width="100%" maxDisplayedLines="2"	 
+												left="5" top="10" right="5" bottom="5"/>
+								</s:ItemRenderer>
+							</fx:Component>
+						</s:itemRenderer>
+					</s:DataGroup>
+					
+				</s:Group> 
+            </s:Scroller>
+        </s:Group>
+    </s:PopUpAnchor>
+    
+	<s:Rect id="rect" left="0" top="0" right="0" bottom="0"
+			radiusX="5" radiusY="5" maxHeight="27">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry ratio="0" color="#F6F6F6"/>
+				<s:GradientEntry ratio="0.35" color="#E6E6E6"/>
+				<s:GradientEntry ratio="1" color="#CDCDCD"/>
+			</s:LinearGradient>
+		</s:fill>
+		<s:stroke>
+			<s:LinearGradientStroke rotation="90">
+				<s:GradientEntry color="#DEDEDE" ratio="0"/>
+				<s:GradientEntry color="#C7C7C7" ratio="1"/>
+			</s:LinearGradientStroke>
+		</s:stroke>
+		<s:filters>
+			<s:DropShadowFilter alpha=".3" color="0x000000" distance="3" angle="70"/>
+		</s:filters>
+	</s:Rect>
+	
+	<s:Group right="0" top="0" bottom="0" buttonMode="true" width="30" >
+		<s:Line left="-1" top="2" bottom="2">
+			<s:stroke><s:SolidColorStroke color="#FEFEFE" weight="1"/></s:stroke>
+		</s:Line>
+		<s:Line left="-2" top="2" bottom="2">
+			<s:stroke><s:SolidColorStroke color="#D0D0D0" weight="1"/></s:stroke>
+		</s:Line>
+		
+		<s:Rect alpha="0" width="100%" height="100%"><s:fill><s:SolidColor color="0xff0000"/></s:fill></s:Rect>
+		<s:Button id="openButton" buttonMode="true" width="100%" height="100%"
+				  skinClass="br.com.andebem.assets.skins.dropdown.DefaultDropDownListButtonSkin" />
+	</s:Group> 
+	
+	<s:Label id="labelDisplay" left="10" bottom="8" top="8" right="40" maxDisplayedLines="1" verticalAlign="middle"
+			 fontSize="10" fontWeight="bold" color="#666666"/>
+
+</s:SparkSkin>

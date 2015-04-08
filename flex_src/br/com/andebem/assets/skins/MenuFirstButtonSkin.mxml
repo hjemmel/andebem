@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:fxg="br.com.andebem.assets.fxg.*" >
+	
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("spark.components.ButtonBarButton")]
+	</fx:Metadata>
+	
+	
+	<fx:Script>
+		<![CDATA[
+			
+			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+			{
+				labelDisplay.filters = [whiteShadow];
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+			}
+			
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:DropShadowFilter id="blackShadow" color="#000000" angle="90" distance="1"/>
+		<s:DropShadowFilter id="whiteShadow" color="#FFFFFF" angle="90" distance="1" blurX="0" blurY="0" quality="1"/>
+		<s:SolidColorStroke id="stroke" weight="1" color="0x666666"/>
+	</fx:Declarations>
+	
+	<!-- states -->
+	<s:states>
+		<s:State name="disabledAndSelected" />
+		<s:State name="downAndSelected" />
+		<s:State name="overAndSelected" />
+		<s:State name="upAndSelected" />
+		<s:State name="disabled" />
+		<s:State name="down" />
+		<s:State name="over" />
+		<s:State name="up" />
+	</s:states>
+	
+	
+	<!--up, downAndSelected-->
+	<s:Rect height="35" left="0" right="0" includeIn="up">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:entries>
+					<s:GradientEntry color="0xffffff" ratio="0"/>
+					<s:GradientEntry color="0xf0f0f0" ratio="0.2"/>
+					<s:GradientEntry color="0xDDDDDD" ratio="1"/>		
+				</s:entries>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	
+	<!--over-->
+	<s:Rect height="35" left="0" right="0" includeIn="over">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:entries>
+					<s:GradientEntry color="0xffffff" ratio="0"/>
+					<s:GradientEntry color="0xf0f0f0" ratio="0.2"/>
+					<s:GradientEntry color="0xCCCCCC" ratio="1"/>		
+				</s:entries>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	
+	<!--down-->
+	<s:Rect height="35" left="0" right="0" includeIn="down, downAndSelected, upAndSelected, overAndSelected">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:entries>
+					<s:GradientEntry color="0xffffff" ratio="0"/>
+					<s:GradientEntry color="0xCCCCCC" ratio="0.2"/>
+					<s:GradientEntry color="0xf0f0f0" ratio="1"/>		
+				</s:entries>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	
+	<!--disabled-->
+	<s:Rect height="35" left="0" right="0" includeIn="disabled, disabledAndSelected">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:entries>
+					<s:GradientEntry color="0xffffff" ratio="0" alpha="0.5"/>
+					<s:GradientEntry color="0xf0f0f0" ratio="0.2" alpha="0.5"/>
+					<s:GradientEntry color="0xCCCCCC" ratio="1" alpha="0.5"/>		
+				</s:entries>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	
+	<s:HGroup left="10" right="10" verticalAlign="middle" height="100%">
+
+		<s:Label id="labelDisplay"
+				 textAlign="center"
+				 maxDisplayedLines="1"
+				 
+				 color.up="0x929292" color.upAndSelected="0x267429" 
+				 color.over="0x333333" color.overAndSelected="0x929292"
+				 color.down="0x333333" color.downAndSelected="0x333333"
+				 color.disabled="0xCCCCCC" color.disabledAndSelected="0xCCCCCC"
+				 
+				 styleName="fontForButton" fontSize="15">
+			
+		</s:Label>
+		
+	</s:HGroup>
+	
+	
+	<s:Line top="0" bottom="2" right="0">
+		<s:stroke>
+			<s:SolidColorStroke weight="1" color="0xbdbdbd"/>
+		</s:stroke>
+	</s:Line>
+	
+	<s:Line top="0" bottom="3" left="0">
+		<s:stroke>
+			<s:SolidColorStroke weight="1" color="0xbdbdbd"/>
+		</s:stroke>
+	</s:Line>
+	
+	<s:Line width="100%" bottom="0" excludeFrom="down, downAndSelected, upAndSelected, overAndSelected">
+		<s:stroke>
+			<s:SolidColorStroke color="#ffffff" weight="1"/>
+		</s:stroke>
+	</s:Line>
+	
+	<fxg:seta horizontalCenter="0" bottom="-5" includeIn="upAndSelected, overAndSelected"/>
+	
+</s:Skin>

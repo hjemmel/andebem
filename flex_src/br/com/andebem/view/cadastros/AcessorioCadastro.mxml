@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<crud:PodCrudTemplate xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					  xmlns:s="library://ns.adobe.com/flex/spark" 
+					  xmlns:mx="library://ns.adobe.com/flex/mx" 
+					  xmlns:crud="br.com.andebem.components.crud.*" 
+					  crudDataProvider="{pm.model.listAcessorios}"
+					  valueObjectClass="{Acessorio}"
+					  labelCrud="Acessório"
+					  creationComplete="pm.dispatchList()"
+					  createAction="pm.dispatchCreate(event)"
+					  updateAction="pm.dispatchUpdate(event)"
+					  deleteAction="pm.dispatchDelete(event)"
+					  xmlns:form="crud.form.*" xmlns:spark="libutilflex.targets.spark.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.domain.Acessorio;
+			import br.com.andebem.presentation.AcessorioPresentationModel;
+			
+			[Inject]
+			[Bindable]
+			public var pm:AcessorioPresentationModel;
+
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:StringValidator id="stringValidator" property="text" />
+	</fx:Declarations>
+	
+	<crud:formItems>
+		<form:CrudFormItem label="Nome: " targetControlValidator="{stringValidator}" dataField="nome" required="true">
+			<spark:TargetTextInput id="nome" maxChars="20"/>
+		</form:CrudFormItem>
+	</crud:formItems>
+	
+</crud:PodCrudTemplate>

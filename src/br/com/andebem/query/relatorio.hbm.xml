@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<sql-query name="mySqlQuery">
+	    <![CDATA[
+			SELECT id FROM ahc.automovel
+		]]>
+	</sql-query>
+	
+	<sql-query name="listaLocacoesPorMes">
+		<return-scalar column="label" type="java.lang.String"/>
+		<return-scalar column="value" type="java.lang.Long"/>
+		<![CDATA[
+			SELECT  TO_CHAR(data_saida, 'YYYY - Month') AS label, 
+        			COUNT(id) as value
+			FROM ahc.locacao 
+			WHERE data_saida BETWEEN :dataInicio AND :dataFim
+			GROUP BY TO_CHAR(data_saida, 'YYYY - Month')
+			ORDER BY COUNT(id);
+		]]>
+	</sql-query>
+	
+	<sql-query name="listaLocacoesPorModelo">
+		<return-scalar column="label" type="java.lang.String"/>
+		<return-scalar column="value" type="java.lang.Long"/>
+		<![CDATA[
+			SELECT (mo.nome || ' ( ' || ma.nome || ' )') AS label,
+			        COUNT(aut.id) AS value
+			FROM ahc.locacao loc
+			    INNER JOIN ahc.automovel aut
+			        ON aut.id = loc.id_automovel
+			    INNER JOIN ahc.modelo mo
+			        ON mo.id = aut.id_modelo
+			    INNER JOIN ahc.marca ma
+			        ON ma.id = mo.id_marca
+			WHERE loc.data_saida BETWEEN :dataInicio AND :dataFim
+			GROUP BY (mo.nome || ' ( ' || ma.nome || ' )')
+			ORDER BY COUNT(aut.id);
+		]]>
+	</sql-query>
+	
+	<sql-query name="listaLocacoesPorCliente">
+		<return-scalar column="label" type="java.lang.String"/>
+		<return-scalar column="value" type="java.lang.Long"/>
+		<![CDATA[
+			SELECT cli.nome AS label,
+			        COUNT(aut.id) AS value
+			FROM ahc.locacao loc
+			    INNER JOIN ahc.automovel aut
+			        ON aut.id = loc.id_automovel
+			    INNER JOIN ahc.cliente cli
+			        ON cli.id = loc.id_cliente
+			WHERE loc.data_saida BETWEEN :dataInicio AND :dataFim
+			GROUP BY cli.nome
+			ORDER BY COUNT(aut.id);
+		]]>
+	</sql-query>
+</hibernate-mapping>

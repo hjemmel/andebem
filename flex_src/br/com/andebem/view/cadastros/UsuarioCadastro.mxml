@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<crud:PodCrudTemplate xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					  xmlns:s="library://ns.adobe.com/flex/spark"
+					  xmlns:mx="library://ns.adobe.com/flex/mx" 
+					  xmlns:crud="br.com.andebem.components.crud.*"
+					  creationComplete="podCrudCreationCompleteHandler(event)"
+					  valueObjectClass="{Usuario}" 
+					  crudDataProvider="{pm.model.listUsuarios}" 
+					  createAction="pm.dispatchCreate(event)"
+					  updateAction="pm.dispatchUpdate(event)" 
+					  deleteAction="pm.dispatchDelete(event)"
+					  labelCrud="Usuário" xmlns:form="crud.form.*"
+					  xmlns:targets="libutilflex.targets.*" xmlns:spark="libutilflex.targets.spark.*">
+
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.domain.Usuario;
+			import br.com.andebem.presentation.UsuarioPresentationModel;
+			
+			import libutilflex.util.Restrict;
+			
+			import mx.events.FlexEvent;
+			
+			[Inject]
+			[Bindable]
+			public var pm:UsuarioPresentationModel;
+			
+			
+			private function podCrudCreationCompleteHandler(event:FlexEvent):void
+			{
+				pm.dispatchList();
+				
+				if( pm.model.listaTipoUsuario==null )
+				{
+					pm.listTipoUsuario();
+				}
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:StringValidator id="stringValidator" property="text" />
+		<mx:EmailValidator id="emailValidator" property="text" />
+		<mx:NumberValidator id="comboValidator" property="selectedIndex" 
+							minValue="0" allowNegative="false" 
+							negativeError="Selecione uma opção"
+							lowerThanMinError="Selecione uma opção"/>
+	</fx:Declarations>
+
+	<crud:formItems>
+		<form:CrudFormItem label="Nome: " targetControlValidator="{stringValidator}" dataField="nome" required="true">
+			<spark:TargetTextInput id="nome" maxChars="100" width="130" />
+		</form:CrudFormItem>
+		<form:CrudFormItem label="Login: " targetControlValidator="{stringValidator}" dataField="login" required="true">
+			<spark:TargetTextInput id="login" maxChars="15" restrict="{Restrict.ALPHA}" width="130" />
+		</form:CrudFormItem>
+		<form:CrudFormItem label="E-mail: " targetControlValidator="{emailValidator}" dataField="email" required="true">
+			<spark:TargetTextInput id="email" maxChars="100" width="130" />
+		</form:CrudFormItem>
+		<form:CrudFormItem label="Senha: " targetControlValidator="{stringValidator}" dataField="senha" required="true">
+			<spark:TargetTextInput id="senha" maxChars="10" displayAsPassword="true" width="130" />
+		</form:CrudFormItem>
+		<form:CrudFormItem label="Tipo: " dataField="tipoUsuario" targetControlValidator="{comboValidator}" required="true">
+			<spark:TargetDropDownList id="ddlTipo" labelField="nome"
+									  keyFields="[id]" dataProvider="{pm.model.listaTipoUsuario}"
+									  width="130" prompt="Selecione..." />
+		</form:CrudFormItem>
+	</crud:formItems>
+
+</crud:PodCrudTemplate>

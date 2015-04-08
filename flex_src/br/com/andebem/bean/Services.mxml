@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<swiz:BeanProvider xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:fx="http://ns.adobe.com/mxml/2009"
+				   xmlns:s="library://ns.adobe.com/flex/spark" xmlns:swiz="http://swiz.swizframework.org"
+				   xmlns:service="br.com.andebem.service.*">
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.helper.ServicesConstants;
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+
+		<mx:AMFChannel id="myamf" url="{ServicesConstants.CHANNEL_URL}" />
+		<mx:ChannelSet id="channelSet" channels="{[myamf]}" />
+		<s:RemoteObject id="usuarioService" destination="{ServicesConstants.USUARIO_REMOTE_SERVICE}" channelSet="{channelSet}" />
+		<s:RemoteObject id="relatorioService" destination="{ServicesConstants.RELATORIO_REMOTE_SERVICE}" channelSet="{channelSet}" />
+		<mx:RemoteObject id="automovelService" destination="{ServicesConstants.AUTOMOVEL_REMOTE_SERVICE}" channelSet="{channelSet}" />
+		<mx:RemoteObject id="acessorioService" destination="{ServicesConstants.ACESSORIO_REMOTE_SERVICE}" channelSet="{channelSet}" />
+		<mx:RemoteObject id="marcaService" destination="{ServicesConstants.MARCA_REMOTE_SERVICE}" channelSet="{channelSet}" />
+		<mx:RemoteObject id="modeloService" destination="{ServicesConstants.MODELO_REMOTE_SERVICE}" channelSet="{channelSet}" />
+		<mx:RemoteObject id="clienteService" destination="{ServicesConstants.CLIENTE_REMOTE_SERVICE}" channelSet="{channelSet}" />
+
+		<swiz:ServiceHelper />
+		<service:UsuarioDelegate />
+	</fx:Declarations>
+</swiz:BeanProvider>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SparkSkin minHeight="21" minWidth="21"
+			 xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+			 xmlns:fb="http://ns.adobe.com/flashbuilder/2009" alpha.disabled="0.5">
+
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.assets.Assets;
+			
+			import spark.components.Button;
+			
+			
+			protected override function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+			{
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+				Button(hostComponent).buttonMode = true;
+				/* labelDisplay.width = hostComponent.width; */
+			}
+		]]>
+	</fx:Script>
+
+	<!-- host component -->
+	<fx:Metadata>[HostComponent("spark.components.Button")]</fx:Metadata>
+
+	<!-- states -->
+	<s:states>
+		<s:State name="up" />
+		<s:State name="over" />
+		<s:State name="down" />
+		<s:State name="disabled" />
+		<fx:Script>
+			<![CDATA[
+				
+			]]>
+		</fx:Script>
+	</s:states>
+
+
+	<s:BitmapImage height="100%" source="{Assets.BUTTON_UP}"
+				   source.down="{Assets.BUTTON_DOWN}" source.over="{Assets.BUTTON_OVER}"
+				   width="100%">
+		<s:filters>
+			<s:DropShadowFilter alpha=".3" color="0x000000" distance="3" angle="70" />
+		</s:filters>
+	</s:BitmapImage>
+	<s:Label id="labelDisplay"
+			 color="#333333" fontSize="12"
+			 fontWeight="bold" horizontalCenter="0"
+			 left="5" right="5"
+			 textAlign="center"
+			 verticalAlign="middle" verticalCenter="0">
+		<s:filters>
+			<s:DropShadowFilter color="#FFFFFF" distance="1" angle="90" alpha="0.76" />
+		</s:filters>
+	</s:Label>
+
+</s:SparkSkin>

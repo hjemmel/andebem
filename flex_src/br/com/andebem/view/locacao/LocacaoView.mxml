@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx" 
+					xmlns:formarea="crud.templates.defaultcrudtemplate.formarea.*" 
+					xmlns:extendedform="libutilflex.extendedform.*"
+					xmlns:filter="br.com.andebem.components.crud.filter.*" 
+					xmlns:cadastros="br.com.andebem.view.cadastros.*"
+					contentCreationComplete="navigatorcontent1_contentCreationCompleteHandler(event)" 
+					>
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.components.crud.filter.FilterUtil;
+			import br.com.andebem.domain.Automovel;
+			import br.com.andebem.helper.AndebemConstants;
+			import br.com.andebem.helper.DownloadUploadManager;
+			import br.com.andebem.presentation.LocacaoPresentationModel;
+			import br.com.andebem.view.locacao.alteracoes.FinalizarLocacaoPopUp;
+			import br.com.andebem.view.locacao.alteracoes.SaidaLocacaoPopUp;
+			
+			import crud.resource.CrudResource;
+			import crud.templates._assets.AssetsCrudTemplate;
+			
+			import mx.collections.ArrayCollection;
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			import spark.components.Application;
+			
+			
+			[Inject]
+			[Bindable]
+			public var pm:LocacaoPresentationModel;
+			
+			[Bindable] public var searchAreaWidth:Number = 300;
+			
+			[Bindable]
+			public var statusProvider:ArrayCollection = new ArrayCollection();
+			
+			public static const DEFAULT_STATE:String = "default";
+			public static const SEARCH_STATE:String = "search";
+
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				var popup:SaidaLocacaoPopUp = PopUpManager.createPopUp(FlexGlobals.topLevelApplication as Application, SaidaLocacaoPopUp, true) as SaidaLocacaoPopUp;
+				popup.automovel = dgAluguel.selectedItem as Automovel;
+				PopUpManager.centerPopUp(popup);
+			}
+
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				var popup:FinalizarLocacaoPopUp = PopUpManager.createPopUp(FlexGlobals.topLevelApplication as Application, FinalizarLocacaoPopUp, true) as FinalizarLocacaoPopUp;
+				popup.automovel = dgAluguel.selectedItem as Automovel;
+				PopUpManager.centerPopUp(popup);
+			}
+
+			protected function navigatorcontent1_contentCreationCompleteHandler(event:FlexEvent):void
+			{
+				statusProvider.addItem(AndebemConstants.DISPONIVEL_STATUS);
+				statusProvider.addItem(AndebemConstants.LOCACAO_STATUS);
+				statusProvider.addItem(AndebemConstants.PASSIVO_LOCACAO_STATUS);
+				statusProvider.addItem(AndebemConstants.MANUTENCAO_STATUS);
+			}
+
+			[Bindable]
+			public var downloadManager:DownloadUploadManager = new DownloadUploadManager(DownloadUploadManager.DOWNLOAD);
+
+			protected function button3_clickHandler(event:MouseEvent):void
+			{
+				var obj:Object = new Object();
+				obj.automovelId = Automovel(dgAluguel.selectedItem).id;
+				
+				var params:Array = new Array();
+				params.push(obj);
+				
+				downloadManager.progressBar = progress;
+				downloadManager.progressBarMessage = "Carregando...";
+				downloadManager.download(params, "laudo.pdf", AndebemConstants.LAUDO_DOWNLOAD_URL);
+				downloadManager.addEventListener(Event.SELECT, onSelect);
+				downloadManager.addEventListener(Event.COMPLETE, onComplete);
+			}
+
+			private function onComplete(event:Event):void
+			{
+				mainGroup.enabled = true;
+				progress.visible = false;
+			}
+
+			private function onSelect(event:Event):void
+			{
+				mainGroup.enabled = false;
+				progress.visible = true;
+			}
+
+		]]>
+	</fx:Script>
+	
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:states>
+		<s:State name="default"/>
+		<s:State name="search"/>
+	</s:states>
+	
+	<s:Group top="5" bottom="5" left="5" right="5" id="mainGroup">
+		<formarea:DefaultCrudFormArea id="searchArea"
+									  width.search="{searchAreaWidth}"
+									  width="0"
+									  bottom="-1" left="-1" top="-1"
+									  formAreaTitle="{CrudResource.getInstance().getCoreString('searchAreaTitle')}"
+									  formAreaTitleIcon="{AssetsCrudTemplate.SEARCH_ICON}"
+									  closeFormAreaClick="setCurrentState('default')">
+			
+			<formarea:visible>false</formarea:visible>
+			<formarea:visible.search>true</formarea:visible.search>
+			
+			<formarea:closeComponentVisible>false</formarea:closeComponentVisible>
+			<formarea:closeComponentVisible.search>true</formarea:closeComponentVisible.search>
+			
+			<formarea:formControl>
+				<extendedform:ExtendedForm formValueObjectClass="{Object}" id="searchFormAutomovel">
+					<extendedform:ExtendedFormItem label="Modelo: ">
+						<filter:FilterTargetDropDownList  width="150" field="modeloLabel"
+														  dataProvider="{pm.autoModel.listaModelos}" labelField="label"
+														  prompt="Selecione..." />
+					</extendedform:ExtendedFormItem>
+					<extendedform:ExtendedFormItem label="Ano: ">
+						<filter:FilterTargetTextInput width="150" field="ano"/>
+					</extendedform:ExtendedFormItem>
+					<extendedform:ExtendedFormItem label="Combustivel: ">
+						<filter:FilterTargetTextInput width="150" field="combustivel"/>
+					</extendedform:ExtendedFormItem>
+					<extendedform:ExtendedFormItem dataField="status" label="Status: ">
+						<filter:FilterTargetDropDownList  width="150"
+														  dataProvider="{statusProvider}"
+														  labelField="nome"
+														  field="statusLabel"
+														  prompt="Selecione..."/>
+					</extendedform:ExtendedFormItem>
+					<mx:FormItem direction="horizontal">
+						<s:Button id="btnSearch"
+								  label="Procurar" 
+								  click="FilterUtil.filter(pm.autoModel.listaAutomoveis, searchFormAutomovel)"/>
+						<s:Button id="btnClean"
+								  label="Limpar"
+								  click="FilterUtil.clean(pm.autoModel.listaAutomoveis, searchFormAutomovel)"/>
+					</mx:FormItem>
+				</extendedform:ExtendedForm>
+			</formarea:formControl>
+			
+		</formarea:DefaultCrudFormArea>
+		<s:VGroup  top="0" right="0" bottom="0" id="listArea">
+			<s:left>-1</s:left>
+			<s:left.search>{searchAreaWidth + 10}</s:left.search>
+			
+			<s:HGroup width="100%">
+				<s:Button height="40" width="100" label="Reservar" enabled="{pm.tipoAcaoHabilita(AndebemConstants.RESERVAR, Automovel(dgAluguel.selectedItem))}" click="pm.colocarComoPassivo(Automovel(dgAluguel.selectedItem)); dgAluguel.selectedIndex=-1;" />
+				<s:Button height="40" width="100" label="Imprimir Laudo" enabled="{pm.tipoAcaoHabilita(AndebemConstants.ALUGAR, Automovel(dgAluguel.selectedItem))}" click="button3_clickHandler(event)" />
+				<s:Button height="40" width="100" label="Cancelar Reserva" enabled="{pm.tipoAcaoHabilita(AndebemConstants.ALUGAR, Automovel(dgAluguel.selectedItem))}" click="pm.colocarComoDisponivel(Automovel(dgAluguel.selectedItem)); dgAluguel.selectedIndex=-1;" />
+				<s:Button height="40" width="100" label="Alugar" enabled="{pm.tipoAcaoHabilita(AndebemConstants.ALUGAR, Automovel(dgAluguel.selectedItem))}" click="button1_clickHandler(event); dgAluguel.selectedIndex=-1;"/>
+				<s:Button height="40" width="100" label="Finalizar" enabled="{pm.tipoAcaoHabilita(AndebemConstants.FINALIZAR, Automovel(dgAluguel.selectedItem))}" click="button2_clickHandler(event); dgAluguel.selectedIndex=-1;"/>
+				<s:Button height="40" width="100" label="Cadastrar Cliente" click="clienteCadastro.right=(clienteCadastro.right == 10)? -300:10"/>
+				<mx:ProgressBar width="100%" visible="false" id="progress" />
+				<s:Button height="40" width="100" label="Buscar" click="currentState=='default'?setCurrentState('search'):setCurrentState('default')"/>
+			</s:HGroup>
+			<mx:DataGrid id="dgAluguel" width="100%" height="100%" dataProvider="{pm.autoModel.listaAutomoveis}">
+				<mx:columns>
+					<mx:DataGridColumn headerText="Modelo (Marca)" dataField="modelo.label" width="200" />
+					<mx:DataGridColumn headerText="Ano" dataField="ano" />
+					<mx:DataGridColumn headerText="Placa" dataField="placa" />
+					<mx:DataGridColumn headerText="Chassi" dataField="chassi" />
+					<mx:DataGridColumn headerText="Cor" dataField="cor" />
+					<mx:DataGridColumn headerText="Combustível" dataField="combustivel" />
+					<mx:DataGridColumn headerText="Status" dataField="status.nome" />
+				</mx:columns>
+			</mx:DataGrid>
+		</s:VGroup>
+	</s:Group>
+	
+	<cadastros:ClienteCadastro id="clienteCadastro" top="10" bottom="10" height="100%" moveEffect="Move" width="250" right="-300"/>
+	
+	<s:transitions>
+		<s:Transition fromState="{DEFAULT_STATE}" toState="{SEARCH_STATE}">
+			<s:Sequence>
+				<s:Resize target="{listArea}" />
+				<mx:SetPropertyAction target="{searchArea}" name="closeComponentVisible" />
+			</s:Sequence>
+		</s:Transition>
+		
+		<s:Transition fromState="{SEARCH_STATE}" toState="{DEFAULT_STATE}">
+			<s:Sequence>
+				<s:Resize target="{listArea}" />
+				<mx:SetPropertyAction target="{searchArea}" name="visible" />
+			</s:Sequence>
+		</s:Transition>
+	</s:transitions>
+	
+</s:NavigatorContent>

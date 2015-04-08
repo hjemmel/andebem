@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<!--- Defines the appearance of the SkinnableContainer class's background. -->
+	<s:Rect id="background" bottom="0" left="0" right="0" top="0"
+		radiusX="10" radiusY="10">
+		<s:fill>
+			<!--- @private -->
+			<s:SolidColor id="bgFill" color="#FFFFFF"/>
+		</s:fill>
+		<s:filters>
+			<s:DropShadowFilter alpha=".5" distance="0" blurX="10" blurY="10"/>
+		</s:filters>
+	</s:Rect>
+
+	<s:Rect height="50%" left="1" right="1" top="1"
+		radiusX="10" radiusY="10">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="#EEEEEE"/>
+				<s:GradientEntry color="#FFFFFF"
+					alpha="0"/>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+
+	<s:Group minHeight="0" minWidth="0" bottom="20" left="20" right="20" top="20">
+
+		<s:layout>
+			<s:VerticalLayout/>
+		</s:layout>
+
+		<s:VGroup gap="3">
+			<s:Label text="Quality Imóvel" color="#555555" fontSize="14"/>
+			<s:Label text="Autenticação" fontSize="20"/>
+		</s:VGroup>
+
+		<s:VGroup width="100%"
+			gap="2">
+			<s:Label text="Usuário"/>
+			<s:TextInput id="inputUser" width="100%"/>
+		</s:VGroup>
+
+		<s:VGroup width="100%"
+			gap="2">
+			<s:Label text="Senha"/>
+			<s:TextInput id="inputSenha" width="100%"
+				displayAsPassword="true"/>
+		</s:VGroup>
+
+		<s:Button id="loginButton" label="Login"/>
+	</s:Group>
+</s:SkinnableContainer>

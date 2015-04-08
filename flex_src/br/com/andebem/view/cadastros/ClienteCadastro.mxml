@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<crud:PodCrudTemplate xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					  xmlns:s="library://ns.adobe.com/flex/spark" 
+					  xmlns:mx="library://ns.adobe.com/flex/mx" 
+					  xmlns:crud="br.com.andebem.components.crud.*"
+					  xmlns:form="crud.form.*" 
+					  xmlns:spark="libutilflex.targets.spark.*" 
+					  xmlns:targets="libutilflex.targets.*" 
+					  xmlns:validator="br.com.andebem.components.validator.*"
+					  labelCrud="Cliente"
+					  creationComplete="podCrudCreationCompleteHandler(event)"
+					  valueObjectClass="{Cliente}" 
+					  crudDataProvider="{pm.model.listClientes}" 
+					  createAction="pm.dispatchCreate(event)"
+					  updateAction="pm.dispatchUpdate(event)" 
+					  deleteAction="pm.dispatchDelete(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.domain.Cliente;
+			import br.com.andebem.presentation.ClientePresentationModel;
+			
+			import libutilflex.util.Restrict;
+			
+			import mx.events.FlexEvent;
+			import mx.events.ValidationResultEvent;
+			import mx.validators.ValidationResult;
+			
+			[Inject]
+			[Bindable]
+			public var pm:ClientePresentationModel
+
+			protected function podCrudCreationCompleteHandler(event:FlexEvent):void
+			{
+				pm.dispatchList();
+				
+				if(pm.model.listaCidades==null)
+				{
+					pm.listCidade();
+				}
+				
+				if(pm.model.listaTipoPessoa==null)
+				{
+					pm.listTipoPessoa();
+				}
+			}
+
+			private function validateCpfCnpj():ValidationResultEvent
+			{
+				var result:ValidationResultEvent = new ValidationResultEvent(ValidationResultEvent.INVALID,false,false,null,[new ValidationResult(true,"","","Escolha entre física e Jurídica")]);
+				if(ddlTipoPessoa.selectedItem!=null)
+				{
+					if(ddlTipoPessoa.selectedItem.id==1)
+					{
+						cpfValidator.source = tiCPFCNPJ;
+						result = cpfValidator.validate(tiCPFCNPJ);
+					}else{
+						cnpjValidator.source
+						result = cnpjValidator.validate(tiCPFCNPJ);
+					}
+				}
+				
+				if(result.type == ValidationResultEvent.INVALID){
+					
+					tiCPFCNPJ.errorString = result.message;
+				}else{
+					tiCPFCNPJ.errorString = "";
+				}
+				cpfValidator.source = null;
+				cnpjValidator.source = null;
+				return result;
+			}
+
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:StringValidator id="stringValidator" property="text" />
+		<mx:DateValidator id="dateValidator" property="selectedDate" allowedFormatChars="/" />
+		<mx:NumberValidator id="comboValidator" property="selectedIndex" 
+							minValue="0" allowNegative="false" 
+							negativeError="Selecione uma opção"
+							lowerThanMinError="Selecione uma opção"/>
+		<validator:CPFValidator id="cpfValidator" property="text" />
+		<validator:CNPJValidator id="cnpjValidator" property="text" />
+	</fx:Declarations>
+	
+	<!--public var id:Object;
+	public var nome:String;
+	public var cpfCnpj:String;
+	public var dataNascimento:Date;
+	public var endereco:String;
+	public var tempoCarteira:int;
+	public var seguroOpcional:Boolean
+	public var cidade:Cidade;
+	public var tipoPessoa:TipoPessoa;-->
+	
+	<crud:formItems>
+		<form:CrudFormItem label="Nome: " targetControlValidator="{stringValidator}" dataField="nome" required="true">
+			<spark:TargetTextInput id="nome" maxChars="30" width="100" restrict="{Restrict.ALPHA_AND_SPACE}"/>
+		</form:CrudFormItem>
+		<form:CrudFormItem label="Tipo: " dataField="tipoPessoa" targetControlValidator="{comboValidator}" required="true">
+			<spark:TargetDropDownList id="ddlTipoPessoa" labelField="nome"
+									  keyFields="[id]" dataProvider="{pm.model.listaTipoPessoa}"
+									  width="100" prompt="Selecione..." />
+		</form:CrudFormItem>
+		<form:CrudFormItem label="CPF / CNPJ: " id="fiCpfCnpj" dataField="cpfCnpj" validationFunction="validateCpfCnpj" required="true">
+			<spark:TargetTextInput id="tiCPFCNPJ" maxChars="30" width="100" restrict="{Restrict.NUMBER}"/>
+		</form:CrudFormItem>
+		<form:CrudFormItem label="Nascimento: " dataField="dataNascimento" targetControlValidator="{dateValidator}" required="true">
+			<targets:TargetDateField id="dtNasc" width="100" formatString="DD/MM/YYYY" yearNavigationEnabled="true"/>
+		</form:CrudFormItem>
+		<form:CrudFormItem label="Endereço: " dataField="endereco" targetControlValidator="{stringValidator}" required="true">
+			<spark:TargetTextInput maxChars="200" width="100"/>
+		</form:CrudFormItem>
+		<form:CrudFormItem label="Carteira: " dataField="tempoCarteira">
+			<spark:TargetNumericStepper minimum="0"/>
+		</form:CrudFormItem>
+		<!--<form:CrudFormItem label="Seguro: " dataField="seguroOpcional">
+			<spark:TargetCheckBox/>
+		</form:CrudFormItem>-->
+		<form:CrudFormItem label="Cidade: " dataField="cidade" targetControlValidator="{comboValidator}" required="true">
+			<spark:TargetDropDownList labelField="nome"
+									  keyFields="[id]" dataProvider="{pm.model.listaCidades}"
+									  width="100" prompt="Selecione..." />
+		</form:CrudFormItem>
+	</crud:formItems>
+</crud:PodCrudTemplate>

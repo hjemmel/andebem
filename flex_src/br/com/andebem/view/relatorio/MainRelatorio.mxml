@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:relatorio="br.com.andebem.view.relatorio.*">
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.domain.GraficoFiltros;
+			import br.com.andebem.event.RelatorioEvent;
+			import br.com.andebem.helper.DateHelper;
+			import br.com.andebem.presentation.RelatorioPresentationModel;
+			
+			import com.adobe.serialization.json.JSON;
+			import com.adobe.serialization.json.JSONEncoder;
+			
+			import libutilflex.messenger.DefaultMessenger;
+			
+			import mx.events.FlexEvent;
+			
+			[Inject]
+			[Bindable]
+			public var model:RelatorioPresentationModel;
+			
+			
+			private function areagraficos1_filtrarRelatorioHandler(event:RelatorioEvent):void
+			{
+				var filtro:GraficoFiltros = event.filtro;
+				filtro.service = menu.getSelectedMenuItem().service;
+				carregarRelatorio(filtro);
+			}
+			
+			
+			private function menu_menuRelatorioCarregadoHandler(event:RelatorioEvent):void
+			{
+				var filtro:GraficoFiltros = new GraficoFiltros();
+				filtro.dataFinal = new Date();
+				filtro.dataInicial = DateHelper.getDataDias(30);
+				filtro.service = event.filtro.service;
+				carregarRelatorio(filtro);
+			}
+			
+			public function carregarRelatorio(filtro:GraficoFiltros):void
+			{
+				model.listaRelatorio(filtro);
+			}
+			
+			protected function menu_listarRelatorioHandler(event:RelatorioEvent):void
+			{
+				var filtro:GraficoFiltros = filtroRelatorio.getFiltro();
+				filtro.service = event.filtro.service;
+				carregarRelatorio(filtro);
+			}
+			
+			public function downloadExcel():void
+			{
+				///DownloadRelatorioServlet
+				var json:String = JSON.encode(model.relatorioModel.listaRelatorio.source);
+				
+				model.downloadRelatorio(json, relatorioBaixado);
+			}
+			
+			private function relatorioBaixado():void
+			{
+				var messenger:DefaultMessenger = new DefaultMessenger();
+				messenger.messengerParent = areaGrafico;
+				messenger.information("Relátorio Gerado com sucesso!!");
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:HGroup top="5" bottom="5" left="5" right="5">
+		<relatorio:RelatorioMenu id="menu" width="200"
+								 height="100%" menuRelatorioCarregado="menu_menuRelatorioCarregadoHandler(event)"
+								 listarRelatorio="menu_listarRelatorioHandler(event)" />
+		<s:VGroup width="100%" height="100%"
+				  paddingBottom="5" paddingTop="5"
+				  paddingRight="5" paddingLeft="5">
+			<relatorio:FiltrosRelatorio donwloadExcel="downloadExcel()" id="filtroRelatorio" height="50" width="100%" filtrarRelatorio="areagraficos1_filtrarRelatorioHandler(event)" />
+			<relatorio:AreaGraficos id="areaGrafico" width="100%" height="100%" listaRelatorio="{model.relatorioModel.listaRelatorio}" filtrarRelatorio="areagraficos1_filtrarRelatorioHandler(event)" />
+		</s:VGroup>
+	</s:HGroup>
+</s:NavigatorContent>

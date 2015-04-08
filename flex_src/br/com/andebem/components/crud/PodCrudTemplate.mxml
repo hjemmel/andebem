@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<crudbase:CrudBase xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+				   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:crudbase="crud.crudbase.*"
+				   xmlns:crud="br.com.andebem.components.crud.*" listControl="{defaultList}"
+				   formControl="{defaultForm}" onListControlDoubleClickSetInFormControlSelectedItem="true"
+				   actionComponents="{[btnNew]}" xmlns:defaultcrudactioncomponents="crud.templates.defaultcrudactioncomponents.*"
+				   xmlns:list="crud.list.*" xmlns:mxeffects="com.adobe.ac.mxeffects.*"
+				   xmlns:helper="br.com.andebem.helper.*" xmlns:form="crud.form.*" xmlns:controls="br.com.andebem.components.controls.*">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<helper:Effects id="effects" />
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.assets.Assets;
+			
+			import com.adobe.utils.StringUtil;
+			
+			import crud.collection.CrudCollection;
+			import crud.events.CrudActionEvent;
+			import crud.statemanager.CrudState;
+			
+			import mx.core.IVisualElement;
+			import mx.events.FlexEvent;
+			
+			import spark.effects.Fade;
+			import spark.events.TextOperationEvent;
+			public static const LIST_STATE:String = "list";
+			public static const FORM_STATE:String = "form";
+			
+			[Bindable]
+			public var valueObjectClass:Class;
+
+			protected function defaultForm_creationCompleteHandler(event:FlexEvent):void
+			{
+				invalidateProperties();
+			}
+			
+			[Bindable]
+			public var crudDataProvider:CrudCollection = null;
+			
+			[Bindable]
+			public var labelCrud:String = "";
+			
+			private var formItemsChanged:Boolean = false;
+			private var _formItems:Array = null;
+			
+			[Bindable]
+			public function get formItems():Array
+			{
+				return _formItems;
+			}
+			
+			public function set formItems(value:Array):void
+			{
+				_formItems = value;
+				
+				formItemsChanged = true;
+				
+				invalidateProperties();
+			}
+			
+			
+			protected override function commitProperties():void
+			{
+				super.commitProperties();
+				
+				if( formItemsChanged && defaultForm!=null && defaultForm.initialized )
+				{
+					formItemsChanged = false;
+					
+					for each( var formItem:IVisualElement in formItems )
+					{
+						defaultForm.addElement(formItem);
+					}
+				}
+			}
+			
+			public override function editActionHandler():void
+			{
+				super.editActionHandler();
+				setFocusAndValidFormItem();
+			}
+			
+			public function setFocusAndValidFormItem():void
+			{
+				formState();
+				formControl.executeValidation();
+				formControl.setFocusOnFirstFormItem();
+			}
+			
+			protected function formState():void
+			{
+				setCurrentState(FORM_STATE);
+			}
+			
+			protected function listState():void
+			{
+				setCurrentState(LIST_STATE);
+				stateManager.setState(CrudState.READING);
+			}
+			
+			
+			public override function newActionHandler():void
+			{
+				super.newActionHandler();
+				setFocusAndValidFormItem();
+			}
+			
+			private function btnSave_addHandler(event:FlexEvent):void
+			{
+				var components:Array = actionComponents;
+				components.push(btnSave);
+				actionComponents = components;
+			}
+			
+			
+			public override function saveActionHandler(smartDispatch:Boolean=true):void
+			{
+				super.saveActionHandler(smartDispatch);
+				
+				if( formControl.isFormValid() )
+					listState();
+			}
+			
+			private function backToList():void
+			{
+				crudReadingState();
+				
+				listState();
+			}
+			
+			protected function defaultList_deleteActionHandler(event:CrudActionEvent):void
+			{
+				event.stopImmediatePropagation();
+				crudDataProvider.selectedItems = listControl.selectedItems;
+				deleteActionHandler();
+			}
+
+			private function searchInput_changeHandler(event:TextOperationEvent):void
+			{
+				 if(StringUtil.trim(searchInput.text)!='')
+				 {
+					 applyFilter();
+				 }else{
+					 resetFilter();
+				 }
+			}
+			
+			private function resetFilter():void 
+			{
+				crudDataProvider.filterFunction = null;
+				crudDataProvider.refresh();
+			}
+			
+			private function applyFilter():void
+			{
+				if( crudDataProvider.filterFunction == null)
+					crudDataProvider.filterFunction = textInputFilterFunction;
+					
+					
+				crudDataProvider.refresh();
+			}
+			
+			private function textInputFilterFunction(item:Object):Boolean
+			{
+					return item["label"].match(new RegExp(searchInput.text, 'i'));
+			}
+			
+
+		]]>
+	</fx:Script>
+
+	<crudbase:states>
+		<s:State name="list" />
+		<s:State name="form" />
+	</crudbase:states>
+
+	<crudbase:transitions>
+		<s:Transition fromState="*" toState="*">
+			<s:Sequence>
+				<s:Fade target="{mainContainer}" alphaFrom="1" alphaTo="0"/>
+				<s:Sequence id="flipEffect" target="{this}">
+					<s:Rotate3D angleYFrom="0" angleYTo="90" duration="500" autoCenterTransform="true" />
+					<s:Rotate3D angleYFrom="-90" angleYTo="0"
+								duration="500" autoCenterTransform="true"
+								startDelay="200" />
+				</s:Sequence>
+				<s:Fade target="{mainContainer}" alphaFrom="0" alphaTo="1"/>
+			</s:Sequence>
+		</s:Transition>
+	</crudbase:transitions>
+
+	<s:Rect height="100%" width="100%" radiusX="5" radiusY="5">
+		<s:fill>
+			<s:SolidColor color="0x2D587A" />
+		</s:fill>
+		<s:stroke>
+			<s:SolidColorStroke color="0x5695C0" weight="1" />
+		</s:stroke>
+		<s:filters>
+			<s:DropShadowFilter distance="2.0" strength="1" alpha="0.5" quality="2" />
+		</s:filters>
+	</s:Rect>
+
+	<s:VGroup width="100%" height="100%"
+			  paddingBottom="10" paddingTop="10"
+			  paddingLeft="10" paddingRight="10">
+		<s:HGroup width="100%">
+			<s:Label text="{this.labelCrud}" color="0xFFFFFF" fontWeight="bold">
+				<s:filters>
+					<s:DropShadowFilter distance="2.0" strength="1"
+										alpha="0.5" quality="2"
+										color="0xFFFFFFF" />
+				</s:filters>
+			</s:Label>
+			<mx:Spacer width="100%" />
+			<mx:Image source="{Assets.BACK_ICON}" includeIn="form"
+					  smoothBitmapContent="true" rollOverEffect="{effects.glowImage}"
+					  rollOutEffect="{effects.unglowImage}" buttonMode="true"
+					  useHandCursor="true" click="backToList()" />
+		</s:HGroup>
+
+		<s:HGroup width="100%" includeIn="list" paddingLeft="5" paddingRight="5">
+			<controls:SuperTextInput id="searchInput" width="100%"  
+									 includeIn="list" changing="searchInput_changeHandler(event)" change="searchInput_changeHandler(event)" />
+			<mx:Image source="{Assets.SEARCH_ICON}" includeIn="list"
+					  smoothBitmapContent="true"/>
+		</s:HGroup>
+
+		<s:SkinnableContainer id="mainContainer" width="100%" height="100%" 
+							  skinClass="br.com.andebem.assets.skins.BoxShadowWhiteSkin">
+			<form:CrudForm id="defaultForm" creationComplete="defaultForm_creationCompleteHandler(event)" includeIn="form" formValueObjectClass="{valueObjectClass}" />
+			<crud:CrudListContainer id="defaultList" top="10"
+									includeIn="list" bottom="10"
+									left="10" doubleClick="editActionHandler()"
+									deleteAction="defaultList_deleteActionHandler(event)" doubleClickEnabled="true"
+									crudDataProvider="{crudDataProvider}" right="10" />
+		</s:SkinnableContainer>
+		<defaultcrudactioncomponents:CrudNewButton id="btnNew" width="100%"
+												   includeIn="list" click="newActionHandler()"
+												   enablePermission="true" />
+
+		<defaultcrudactioncomponents:CrudSaveButton id="btnSave" width="100%"
+													includeIn="form" click="saveActionHandler(true)"
+													creationComplete="btnSave_addHandler(event)" />
+	</s:VGroup>
+</crudbase:CrudBase>

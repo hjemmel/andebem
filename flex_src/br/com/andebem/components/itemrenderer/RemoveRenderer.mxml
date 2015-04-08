@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:MXDataGridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						  xmlns:s="library://ns.adobe.com/flex/spark" 
+						  xmlns:mx="library://ns.adobe.com/flex/mx" 
+						  focusEnabled="true">
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.assets.Assets;
+			
+			import mx.collections.IList;
+			import mx.controls.DataGrid;
+
+			protected function deleteClickHandler(event:MouseEvent):void
+			{
+				var provider:IList = IList(DataGrid(this.owner).dataProvider);
+				provider.removeItemAt(provider.getItemIndex(data));
+			}
+
+		]]>
+	</fx:Script>
+	<mx:Image source="{Assets.REMOVE_ICON}" smoothBitmapContent="true"
+			  horizontalCenter="0" verticalCenter="0" enabled="{data.isNew}" buttonMode="true"
+			  click="deleteClickHandler(event)" />
+</s:MXDataGridItemRenderer>

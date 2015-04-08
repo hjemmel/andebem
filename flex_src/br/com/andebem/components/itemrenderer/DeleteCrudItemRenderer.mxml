@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+				xmlns:mx="library://ns.adobe.com/flex/mx" autoDrawBackground="true"
+				width="100%">
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.assets.Assets;
+			
+			import crud.events.CrudActionEvent;
+			
+			import libutilflex.util.ConvertUtil;
+			
+			import spark.components.List;
+			
+			protected function deleteClickHandler(event:MouseEvent):void
+			{
+				owner.dispatchEvent(new CrudActionEvent(CrudActionEvent.DELETE_ACTION, ConvertUtil.vectorToArray(List(owner).selectedItems), true));
+			}
+		]]>
+	</fx:Script>
+
+	<s:Label text="{label}" left="5" verticalCenter="0" />
+
+	<mx:Image source="{Assets.REMOVE_ICON}" smoothBitmapContent="true"
+			  right="5" verticalCenter="0"
+			  click="deleteClickHandler(event)" />
+
+</s:ItemRenderer>

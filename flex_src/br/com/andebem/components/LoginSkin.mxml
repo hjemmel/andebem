@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+	 ADOBE SYSTEMS INCORPORATED
+	 Copyright 2008 Adobe Systems Incorporated
+	 All Rights Reserved.
+
+	 NOTICE: Adobe permits you to use, modify, and distribute this file
+	 in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<!--- The default skin class for a Spark SkinnableContainer container.
+
+	 @see spark.components.SkinnableContainer
+
+	 @langversion 3.0
+	 @playerversion Flash 10
+	 @playerversion AIR 1.5
+	 @productversion Flex 4
+-->
+<s:Skin xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark" xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
+	alpha.disabled="0.5" xmlns:components="br.com.andebem.components.*"
+	xmlns:controls="br.com.andebem.components.controls.*"
+	xmlns:skins="br.com.andebem.assets.skins.*">
+	<fx:Metadata>[HostComponent("br.com.andebem.components.LoginBox")]</fx:Metadata>
+
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="disabled"/>
+		<s:State name="invalidLogin"/>
+	</s:states>
+	<s:transitions>
+		<s:Transition fromState="*" toState="invalidLogin">
+			<s:Sequence id="shake" duration="100" target="{hostComponent}">
+				<mx:Move xBy="20"/>
+				<mx:Move xBy="-20"/>
+				<mx:Move xBy="20"/>
+				<mx:Move xBy="-20"/>
+				<mx:Move xBy="20"/>
+				<mx:Move xBy="-20"/>
+				<mx:Move xBy="20"/>
+				<mx:Move xBy="-20"/>
+			</s:Sequence>
+		</s:Transition>
+	</s:transitions>
+
+	<!--- Defines the appearance of the SkinnableContainer class's background. -->
+	<s:Rect id="background" bottom="0" left="0" right="0" top="0"
+		radiusX="10" radiusY="10">
+		<s:fill>
+			<!--- @private -->
+			<s:SolidColor id="bgFill" color="#FFFFFF"/>
+		</s:fill>
+		<s:filters>
+			<s:DropShadowFilter color="#2181C2"
+				alpha=".5" distance="0" blurX="10" blurY="10" strength="2"/>
+		</s:filters>
+	</s:Rect>
+
+	<s:Rect height="50%" left="1" right="1" top="1"
+		radiusX="10" radiusY="10">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<!--<s:GradientEntry color="#EEEEEE"/>-->
+				<s:GradientEntry color="#F1F3E5"/>
+				<s:GradientEntry color="#FFFFFF"
+					alpha="0"/>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+
+
+	<s:Rect height="50%" bottom="1" left="1" right="1"
+		radiusX="10" radiusY="10">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<!--<s:GradientEntry color="#EEEEEE"/>-->
+				<s:GradientEntry color="#FFFFFF"
+					alpha="0"/>
+				<s:GradientEntry color="#F1F3E5"/>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+
+	<s:Rect id="border" bottom="0" left="0" right="0" top="0"
+		radiusX="10" radiusY="10">
+		<s:stroke>
+			<!--- @private -->
+			<s:SolidColorStroke id="borderStroke" weight="1"/>
+		</s:stroke>
+	</s:Rect>
+
+	<s:Group id="contentGroup" minHeight="0" minWidth="0" bottom="20" left="20" right="20" top="20">
+
+		<s:layout>
+			<s:VerticalLayout/>
+		</s:layout>
+
+		<s:Label text="Ande Bem Rent a Car" color="#555555" fontSize="14"/>
+
+		<s:HGroup width="100%" horizontalAlign="center">
+			<mx:Image height="75" source="br/com/andebem/assets/images/car_image.png" width="75"/>
+		</s:HGroup>
+
+		<s:VGroup width="100%"
+			gap="2">
+			<s:Label text="Usuário"/>
+			<controls:SuperTextInput id="usernameInput" width="100%"
+				errorString="{hostComponent.usernameError}"/>
+		</s:VGroup>
+
+		<s:VGroup width="100%"
+			gap="2">
+			<s:Label text="Senha"/>
+			<controls:SuperTextInput id="passwordInput" width="100%"
+				displayAsPassword="true" errorString="{hostComponent.passwordError}"/>
+		</s:VGroup>
+
+		<s:Button id="okButton" label="Enviar"/>
+	</s:Group>
+</s:Skin>

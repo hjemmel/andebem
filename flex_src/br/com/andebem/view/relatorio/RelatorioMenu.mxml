@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx" creationComplete="skinnablecontainer1_creationCompleteHandler(event)">
+	<fx:Metadata>
+		[Event(name="menuRelatorioCarregado",type="br.com.andebem.event.RelatorioEvent")]
+		[Event(name="listarRelatorio",type="br.com.andebem.event.RelatorioEvent")]
+	</fx:Metadata>
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.domain.GraficoFiltros;
+			import br.com.andebem.event.RelatorioEvent;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.rpc.xml.SimpleXMLDecoder;
+			import mx.utils.ArrayUtil;
+			
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			public var menuItens:ArrayCollection;
+			
+			protected function skinnablecontainer1_creationCompleteHandler(event:FlexEvent):void
+			{
+				var request:URLLoader = new URLLoader;
+				request.addEventListener(Event.COMPLETE, onComplete);
+				request.load(new URLRequest(
+							 "br/com/andebem/assets/xml/menu_relatorio.xml"));
+			
+			}
+			
+			private function onComplete(event:Event):void
+			{
+				var xml:XMLDocument = new XMLDocument( event.target.data );
+				var decoder:SimpleXMLDecoder = new SimpleXMLDecoder();
+				var data:Object = decoder.decodeXML( xml );
+				var menus:Array = ArrayUtil.toArray( data.relatorios.relatorio );
+				menuItens = new ArrayCollection(menus);
+				var filtro:GraficoFiltros = new GraficoFiltros();
+				filtro.service = menuItens[0].service;
+				dispatchEvent(new RelatorioEvent(RelatorioEvent.MENU_RELATORIO_CARREGADO,filtro));
+			}
+			
+			public function getSelectedMenuItem():Object
+			{
+				return relatorioMenu.selectedItem;
+			}
+			
+			private function relatorioMenu_changeHandler(event:IndexChangeEvent):void
+			{
+				var filtro:GraficoFiltros = new GraficoFiltros();
+				filtro.service = getSelectedMenuItem().service;
+				dispatchEvent(new RelatorioEvent(RelatorioEvent.LISTAR_RELATORIO, filtro));
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+
+	<s:ButtonBar id="relatorioMenu" dataProvider="{menuItens}"
+				 skinClass="br.com.andebem.assets.skins.ChartMenuButtonBarSkin" requireSelection="true"
+				 change="relatorioMenu_changeHandler(event)">
+		<s:layout>
+			<s:VerticalLayout paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10" />
+		</s:layout>
+	</s:ButtonBar>
+
+</s:SkinnableContainer>

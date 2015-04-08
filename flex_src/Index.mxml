@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:view="br.com.andebem.view.*"
+			   xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+			   pageTitle="Ande Bem Rent-a-Car" xmlns:bean="br.com.andebem.bean.*"
+			   xmlns:helper="br.com.andebem.helper.*" xmlns:swiz="http://swiz.swizframework.org"
+			   xmlns:domain="br.com.andebem.domain.*" xmlns:main="br.com.andebem.view.main.*"
+			   preloader="preloaders.ServiceFeedbackPreloader">
+
+	<fx:Script>
+		<![CDATA[
+			import br.com.andebem.helper.ErrorManager;
+			
+			import mx.controls.Alert;
+			import mx.logging.LogEventLevel;
+			import mx.rpc.AsyncResponder;
+			import mx.rpc.AsyncToken;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import preloaders.ServiceFeedbackPreloader;
+			
+			protected function ro_resultHandler(event:ResultEvent):void
+			{
+				Alert.show(String(event.result));
+			}
+			
+			protected function ro_faultHandler(event:FaultEvent):void
+			{
+				Alert.show(event.fault.faultDetail);
+			}
+			
+			/* protected function button1_clickHandler(event:MouseEvent):void
+			   {
+			   //ro.helloTeste("ajuste");
+			   login();
+			 } */
+			
+			/* private function login():void {
+			   var token:AsyncToken = channelSet.login("hans", "hans");
+			   token.addResponder(new AsyncResponder(loginResult, loginFault));
+			   }
+			   private function loginResult(event:ResultEvent, token:AsyncToken):void {
+			   //get data srv.getMyEntities();
+			   //change state currentState = “userAuthenticated”;
+			   ro.helloTeste("ajuste");
+			   }
+			   private function loginFault(event:FaultEvent, token:AsyncToken):void {
+			   Alert.show(event.fault.faultString);
+			 } */
+		]]>
+	</fx:Script>
+
+	<fx:Style source="/br/com/andebem/assets/css/Main.css" />
+
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+
+		<fx:Array id="beans">
+			<bean:Services />
+			<bean:Presentations />
+			<bean:Models />
+			<bean:Controllers />
+		</fx:Array>
+
+		<fx:Array id="loggingTargets">
+			<helper:SwizLoggingTarget>
+				<s:TraceTarget id="logTarget" fieldSeparator="->"
+							   includeDate="true" includeTime="true"
+							   includeLevel="true" level="{LogEventLevel.ALL}">
+				</s:TraceTarget>
+			</helper:SwizLoggingTarget>
+		</fx:Array>
+
+		<swiz:SwizConfig id="swizConfig" viewPackages="br.com.andebem.view.*" eventPackages="br.com.andebem.event.*" defaultFaultHandler="ErrorManager.showError" />
+
+		<swiz:Swiz config="{swizConfig}" beanProviders="{beans}" loggingTargets="{loggingTargets}" />
+
+	</fx:Declarations>
+	<main:MainView height="100%" width="100%" />
+
+</s:Application>
